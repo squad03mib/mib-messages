@@ -1,0 +1,39 @@
+#
+# Message in A bottle Docker Compose file
+#
+
+version: "3.6"
+
+services:
+  db:
+    image: postgres:13
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      # this is only for development purpose
+      - "5342:5342"
+    env_file:
+      - env_file
+
+  mib_lottery:
+    <<:
+      # Building the image
+      &mib_lottery
+      image: "mib-lottery:latest"
+      build:
+        context: .
+        dockerfile: Dockerfile
+
+    ports:
+      - "8080:8080"
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+
+# Declaring all volumes
+volumes:
+  pgdata: null # for maintaing db data
