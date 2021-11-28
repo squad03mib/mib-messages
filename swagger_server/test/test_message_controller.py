@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+from datetime import datetime
 
 from flask import json
 from six import BytesIO
@@ -11,7 +12,7 @@ from swagger_server.test import BaseTestCase
 
 class TestMessageController(BaseTestCase):
     """MessageController integration test stubs"""
-
+    '''
     def test_mib_resources_message_delete_message(self):
         """Test case for mib_resources_message_delete_message
 
@@ -46,13 +47,17 @@ class TestMessageController(BaseTestCase):
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-
+    '''
     def test_mib_resources_message_send_message(self):
         """Test case for mib_resources_message_send_message
 
         Send a new message
         """
         body = Message()
+        body.date_delivery = datetime.now()
+        body.id_sender = 0
+        body.recipients_list = [0]
+        body.text = "ters"
         response = self.client.open(
             '/messages',
             method='POST',
@@ -60,7 +65,7 @@ class TestMessageController(BaseTestCase):
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-
+    '''
     def test_mib_resources_message_withdraw_message(self):
         """Test case for mib_resources_message_withdraw_message
 
@@ -71,7 +76,7 @@ class TestMessageController(BaseTestCase):
             method='POST')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-
+    '''
 
 if __name__ == '__main__':
     import unittest

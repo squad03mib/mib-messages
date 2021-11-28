@@ -47,7 +47,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Message'
+              $ref: '#/components/schemas/Message_post'
         required: true
       responses:
         "201":
@@ -158,7 +158,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Draft'
+              $ref: '#/components/schemas/Draft_post'
         required: true
       responses:
         "201":
@@ -300,6 +300,39 @@ components:
         - "2, 3"
         text: "Hi, how are you ?"
         id_sender: 1
+    Message_post:
+      required:
+      - date_delivery
+      - recipients_list
+      - text
+      type: object
+      properties:
+        id_sender:
+          type: integer
+          description: Sender ID
+          example: 1
+        recipients_list:
+          type: array
+          description: List of recipients IDs
+          items:
+            example: "2, 3"
+        text:
+          type: string
+          description: Message text
+          example: "Hi, how are you ?"
+        date_delivery:
+          type: string
+          description: date of delivery
+          format: date
+          example: 2021-11-24
+      example:
+        date_delivery: 2021-11-24T00:00:00.000+00:00
+        recipients_list:
+        - "2, 3"
+        - "2, 3"
+        text: "Hi, how are you ?"
+        id_sender: 1
+    
     Draft:
       required:
       - date_delivery
@@ -359,3 +392,33 @@ components:
         text: "Hi, how are you ?"
         id_sender: 1
 
+    Draft_post:
+      required:
+      - text
+      type: object
+      properties:
+        id_sender:
+          type: integer
+          description: Sender ID
+          example: 1
+        recipients_list:
+          type: array
+          description: List of recipients IDs
+          items:
+            example: "2, 3"
+        text:
+          type: string
+          description: Message text
+          example: "Hi, how are you ?"
+        date_delivery:
+          type: string
+          description: date of delivery
+          format: date
+          example: 2021-11-24
+      example:
+        date_delivery: 2021-11-24T00:00:00.000+00:00
+        recipients_list:
+        - "2, 3"
+        - "2, 3"
+        text: "Hi, how are you ?"
+        id_sender: 1

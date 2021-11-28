@@ -14,7 +14,7 @@ class Draft(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_message: int=None, id_sender: int=None, recipients_list: List[Object]=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: date=None, date_send: date=None):  # noqa: E501
+    def __init__(self, id_message: int=None, id_sender: int=None, recipients_list: List[object]=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: date=None, date_send: date=None):  # noqa: E501
         """Draft - a model defined in Swagger
 
         :param id_message: The id_message of this Draft.  # noqa: E501
@@ -22,7 +22,7 @@ class Draft(Model):
         :param id_sender: The id_sender of this Draft.  # noqa: E501
         :type id_sender: int
         :param recipients_list: The recipients_list of this Draft.  # noqa: E501
-        :type recipients_list: List[Object]
+        :type recipients_list: List[object]
         :param text: The text of this Draft.  # noqa: E501
         :type text: str
         :param message_delivered: The message_delivered of this Draft.  # noqa: E501
@@ -37,7 +37,7 @@ class Draft(Model):
         self.swagger_types = {
             'id_message': int,
             'id_sender': int,
-            'recipients_list': List[Object],
+            'recipients_list': List[object],
             'text': str,
             'message_delivered': bool,
             'message_read': bool,
@@ -126,24 +126,24 @@ class Draft(Model):
         self._id_sender = id_sender
 
     @property
-    def recipients_list(self) -> List[Object]:
+    def recipients_list(self) -> List[object]:
         """Gets the recipients_list of this Draft.
 
         List of recipients IDs  # noqa: E501
 
         :return: The recipients_list of this Draft.
-        :rtype: List[Object]
+        :rtype: List[object]
         """
         return self._recipients_list
 
     @recipients_list.setter
-    def recipients_list(self, recipients_list: List[Object]):
+    def recipients_list(self, recipients_list: List[object]):
         """Sets the recipients_list of this Draft.
 
         List of recipients IDs  # noqa: E501
 
         :param recipients_list: The recipients_list of this Draft.
-        :type recipients_list: List[Object]
+        :type recipients_list: List[object]
         """
         if recipients_list is None:
             raise ValueError("Invalid value for `recipients_list`, must not be `None`")  # noqa: E501

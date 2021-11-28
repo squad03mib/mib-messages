@@ -1,8 +1,12 @@
+from datetime import datetime
 import connexion
 import six
 
 from swagger_server.models.message import Message  # noqa: E501
+from swagger_server.models.message_post import MessagePost  # noqa: E501
 from swagger_server import util
+from swagger_server.dao.message_manager import MessageManager
+from swagger_server.models_db.message import Message as Message_db
 
 
 def mib_resources_message_delete_message(message_id):  # noqa: E501
@@ -15,7 +19,7 @@ def mib_resources_message_delete_message(message_id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return MessageManager.delete_message_by_id(message_id)
 
 
 def mib_resources_message_get_all_messages(type):  # noqa: E501
@@ -41,7 +45,7 @@ def mib_resources_message_get_message(message_id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    return MessageManager.retrieve_by_id(message_id)
 
 
 def mib_resources_message_send_message(body):  # noqa: E501
@@ -55,8 +59,15 @@ def mib_resources_message_send_message(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Message.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+        body = MessagePost.from_dict(connexion.request.get_json())  # noqa: E501
+    message_db = Message_db()
+    message_db.id_sender = body.id_sender
+    message_db.id_receiver = body.recipients_list[0]
+    message_db.date_delivery = body.date_delivery
+    message_db.text = body.text
+    message_db.date_send = datetime.now()
+    MessageManager.create_message(message_db)
+    return 200
 
 
 def mib_resources_message_withdraw_message(message_id):  # noqa: E501
@@ -69,4 +80,10 @@ def mib_resources_message_withdraw_message(message_id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    message : Message = MessageManager.retrieve_by_id(message_id)
+    if message is None:
+        return 404
+    if message.message_delivered:
+        return 404
+    MessageManager.delete_message(message)
+    return 200

@@ -2,6 +2,7 @@ import connexion
 import six
 
 from swagger_server.models.draft import Draft  # noqa: E501
+from swagger_server.models.draft_post import DraftPost  # noqa: E501
 from swagger_server import util
 
 
@@ -53,7 +54,7 @@ def mib_resources_draft_save_draft(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Draft.from_dict(connexion.request.get_json())  # noqa: E501
+        body = DraftPost.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
 
 
