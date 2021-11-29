@@ -45,7 +45,7 @@ def mib_resources_message_get_message(message_id):  # noqa: E501
 
     :rtype: None
     """
-    return MessageManager.retrieve_by_id(message_id)
+    return Message.from_dict(MessageManager.retrieve_by_id(message_id).serialize()).to_dict()
 
 
 def mib_resources_message_send_message(body):  # noqa: E501
@@ -60,11 +60,13 @@ def mib_resources_message_send_message(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = MessagePost.from_dict(connexion.request.get_json())  # noqa: E501
+    
     message_db = Message_db()
     message_db.id_sender = body.id_sender
     message_db.id_receiver = body.recipients_list[0]
     message_db.date_delivery = body.date_delivery
     message_db.text = body.text
+
     message_db.date_send = datetime.now()
     message_db = MessageManager.create_message(message_db)
     return Message.from_dict(message_db.serialize()).to_dict()
