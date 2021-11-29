@@ -7,6 +7,7 @@ class MessageManager(Manager):
     @staticmethod
     def create_message(message: Message):
         Manager.create(message=message)
+        return message
 
     @staticmethod
     def retrieve_by_id(id_):

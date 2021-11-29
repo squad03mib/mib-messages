@@ -14,7 +14,7 @@ class Draft(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_message: int=None, id_sender: int=None, recipients_list: List[object]=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: date=None, date_send: date=None):  # noqa: E501
+    def __init__(self, id_message: int=None, id_sender: int=None, recipients_list: List[object]=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: str=None, date_send: str=None):  # noqa: E501
         """Draft - a model defined in Swagger
 
         :param id_message: The id_message of this Draft.  # noqa: E501
@@ -30,9 +30,9 @@ class Draft(Model):
         :param message_read: The message_read of this Draft.  # noqa: E501
         :type message_read: bool
         :param date_delivery: The date_delivery of this Draft.  # noqa: E501
-        :type date_delivery: date
+        :type date_delivery: str
         :param date_send: The date_send of this Draft.  # noqa: E501
-        :type date_send: date
+        :type date_send: str
         """
         self.swagger_types = {
             'id_message': int,
@@ -41,8 +41,8 @@ class Draft(Model):
             'text': str,
             'message_delivered': bool,
             'message_read': bool,
-            'date_delivery': date,
-            'date_send': date
+            'date_delivery': str,
+            'date_send': str
         }
 
         self.attribute_map = {
@@ -226,24 +226,24 @@ class Draft(Model):
         self._message_read = message_read
 
     @property
-    def date_delivery(self) -> date:
+    def date_delivery(self) -> str:
         """Gets the date_delivery of this Draft.
 
         date of delivery  # noqa: E501
 
         :return: The date_delivery of this Draft.
-        :rtype: date
+        :rtype: str
         """
         return self._date_delivery
 
     @date_delivery.setter
-    def date_delivery(self, date_delivery: date):
+    def date_delivery(self, date_delivery: str):
         """Sets the date_delivery of this Draft.
 
         date of delivery  # noqa: E501
 
         :param date_delivery: The date_delivery of this Draft.
-        :type date_delivery: date
+        :type date_delivery: str
         """
         if date_delivery is None:
             raise ValueError("Invalid value for `date_delivery`, must not be `None`")  # noqa: E501
@@ -251,24 +251,24 @@ class Draft(Model):
         self._date_delivery = date_delivery
 
     @property
-    def date_send(self) -> date:
+    def date_send(self) -> str:
         """Gets the date_send of this Draft.
 
         date of send  # noqa: E501
 
         :return: The date_send of this Draft.
-        :rtype: date
+        :rtype: str
         """
         return self._date_send
 
     @date_send.setter
-    def date_send(self, date_send: date):
+    def date_send(self, date_send: str):
         """Sets the date_send of this Draft.
 
         date of send  # noqa: E501
 
         :param date_send: The date_send of this Draft.
-        :type date_send: date
+        :type date_send: str
         """
         if date_send is None:
             raise ValueError("Invalid value for `date_send`, must not be `None`")  # noqa: E501

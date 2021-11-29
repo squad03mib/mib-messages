@@ -14,7 +14,7 @@ class DraftPost(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_sender: int=None, recipients_list: List[object]=None, text: str=None, date_delivery: date=None):  # noqa: E501
+    def __init__(self, id_sender: int=None, recipients_list: List[object]=None, text: str=None, date_delivery: str=None):  # noqa: E501
         """DraftPost - a model defined in Swagger
 
         :param id_sender: The id_sender of this DraftPost.  # noqa: E501
@@ -24,13 +24,13 @@ class DraftPost(Model):
         :param text: The text of this DraftPost.  # noqa: E501
         :type text: str
         :param date_delivery: The date_delivery of this DraftPost.  # noqa: E501
-        :type date_delivery: date
+        :type date_delivery: str
         """
         self.swagger_types = {
             'id_sender': int,
             'recipients_list': List[object],
             'text': str,
-            'date_delivery': date
+            'date_delivery': str
         }
 
         self.attribute_map = {
@@ -127,24 +127,24 @@ class DraftPost(Model):
         self._text = text
 
     @property
-    def date_delivery(self) -> date:
+    def date_delivery(self) -> str:
         """Gets the date_delivery of this DraftPost.
 
         date of delivery  # noqa: E501
 
         :return: The date_delivery of this DraftPost.
-        :rtype: date
+        :rtype: str
         """
         return self._date_delivery
 
     @date_delivery.setter
-    def date_delivery(self, date_delivery: date):
+    def date_delivery(self, date_delivery: str):
         """Sets the date_delivery of this DraftPost.
 
         date of delivery  # noqa: E501
 
         :param date_delivery: The date_delivery of this DraftPost.
-        :type date_delivery: date
+        :type date_delivery: str
         """
 
         self._date_delivery = date_delivery

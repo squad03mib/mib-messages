@@ -282,13 +282,13 @@ components:
         date_delivery:
           type: string
           description: date of delivery
-          format: date
-          example: 2021-11-24
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
         date_send:
           type: string
           description: date of send
-          format: date
-          example: 2021-11-23
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
       example:
         date_send: 2021-11-23T00:00:00.000+00:00
         id_message: 0
@@ -323,8 +323,8 @@ components:
         date_delivery:
           type: string
           description: date of delivery
-          format: date
-          example: 2021-11-24
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
       example:
         date_delivery: 2021-11-24T00:00:00.000+00:00
         recipients_list:
@@ -373,13 +373,13 @@ components:
         date_delivery:
           type: string
           description: date of delivery
-          format: date
-          example: 2021-11-24
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
         date_send:
           type: string
           description: date of send
-          format: date
-          example: 2021-11-23
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
       example:
         date_send: 2021-11-23T00:00:00.000+00:00
         id_message: 0
@@ -413,8 +413,8 @@ components:
         date_delivery:
           type: string
           description: date of delivery
-          format: date
-          example: 2021-11-24
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
       example:
         date_delivery: 2021-11-24T00:00:00.000+00:00
         recipients_list:

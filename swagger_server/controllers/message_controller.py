@@ -66,8 +66,8 @@ def mib_resources_message_send_message(body):  # noqa: E501
     message_db.date_delivery = body.date_delivery
     message_db.text = body.text
     message_db.date_send = datetime.now()
-    MessageManager.create_message(message_db)
-    return 200
+    message_db = MessageManager.create_message(message_db)
+    return Message.from_dict(message_db.serialize()).to_dict()
 
 
 def mib_resources_message_withdraw_message(message_id):  # noqa: E501
