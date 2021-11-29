@@ -1,16 +1,21 @@
 import logging
 
 import connexion
-from flask_testing import TestCase
+import unittest
 
 from swagger_server.encoder import JSONEncoder
+from swagger_server import create_app
 
 
-class BaseTestCase(TestCase):
+class BaseTestCase(unittest.TestCase):
+    """
+    This class should be implemented by
+    all classes that tests resources
+    """
+    client = None
 
-    def create_app(self):
-        logging.getLogger('connexion.operation').setLevel('ERROR')
-        app = connexion.App(__name__, specification_dir='../swagger/')
-        app.app.json_encoder = JSONEncoder
-        app.add_api('swagger.yaml')
-        return app.app
+    @classmethod
+    def setUpClass(cls):
+        from swagger_server import create_app
+        app = create_app()
+        cls.client = app.test_client()

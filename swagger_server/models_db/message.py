@@ -1,8 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from swagger_server import db
 
-db_ = SQLAlchemy()
-
 class Message(db.Model):
 
     __tablename__ = 'message'

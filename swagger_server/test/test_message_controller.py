@@ -1,13 +1,14 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import datetime
 
-from flask import json
+import json
 from six import BytesIO
 
 from swagger_server.models.message import Message  # noqa: E501
+from swagger_server.models.message_post import MessagePost  # noqa: E501
 from swagger_server.test import BaseTestCase
+from datetime import datetime
 
 
 class TestMessageController(BaseTestCase):
@@ -53,18 +54,17 @@ class TestMessageController(BaseTestCase):
 
         Send a new message
         """
-        body = Message()
-        body.date_delivery = datetime.now()
+        body = MessagePost()
         body.id_sender = 0
-        body.recipients_list = [0]
-        body.text = "ters"
+        body.recipients_list = [1]
+        body.date_delivery = datetime.now().isoformat()
+        body.text = "test"
         response = self.client.open(
             '/messages',
             method='POST',
-            data=json.dumps(body),
+            data=json.dumps(body.to_dict()),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+        assert response.status_code == 200
     '''
     def test_mib_resources_message_withdraw_message(self):
         """Test case for mib_resources_message_withdraw_message
@@ -77,7 +77,3 @@ class TestMessageController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
     '''
-
-if __name__ == '__main__':
-    import unittest
-    unittest.main()

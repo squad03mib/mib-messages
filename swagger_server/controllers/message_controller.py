@@ -64,7 +64,7 @@ def mib_resources_message_send_message(body):  # noqa: E501
     message_db = Message_db()
     message_db.id_sender = body.id_sender
     message_db.id_receiver = body.recipients_list[0]
-    message_db.date_delivery = body.date_delivery
+    message_db.date_delivery = datetime.fromisoformat(body.date_delivery)
     message_db.text = body.text
 
     message_db.date_send = datetime.now()

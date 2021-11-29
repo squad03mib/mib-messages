@@ -2,16 +2,18 @@
 
 from __future__ import absolute_import
 
-from flask import json
+import json
 from six import BytesIO
 
 from swagger_server.models.draft import Draft  # noqa: E501
+from swagger_server.models.draft_post import DraftPost  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
 class TestDraftController(BaseTestCase):
-    """DraftController integration test stubs"""
     '''
+    """DraftController integration test stubs"""
+
     def test_mib_resources_draft_delete_draft(self):
         """Test case for mib_resources_draft_delete_draft
 
@@ -50,7 +52,7 @@ class TestDraftController(BaseTestCase):
 
         Create a new draft
         """
-        body = Draft()
+        body = DraftPost()
         response = self.client.open(
             '/drafts',
             method='POST',
