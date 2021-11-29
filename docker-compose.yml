@@ -45,7 +45,7 @@ services:
     env_file:
       - env_file
     environment:
-      - POSTGRES_HOST=db
+      - POSTGRES_HOST=db_messages
     restart: on-failure
     depends_on:
       - db_messages
