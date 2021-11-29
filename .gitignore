@@ -63,3 +63,4 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 swagger_server/:memory
+db.sqlite
