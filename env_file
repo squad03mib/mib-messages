@@ -12,5 +12,5 @@ FLASK_ENV=production
 # POSTGRES_HOST = 
 #
 POSTGRES_PASSWORD=abcd
-POSTGRES_USER=mib_lottery_ms
-POSTGRES_DB=mib_lottery_ms
+POSTGRES_USER=mib_messages_ms
+POSTGRES_DB=mib_messages_ms

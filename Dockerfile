@@ -4,9 +4,10 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app/
+COPY requirements.prod.txt /usr/src/app/
 
 # installing all requirements
-RUN ["pip", "install", "-r", "requirements.txt"]
+RUN ["pip", "install", "-r", "requirements.prod.txt"]
 
 COPY . /usr/src/app
 

@@ -14,9 +14,9 @@ class Manager(object):
         Manager.check_none(**kwargs)
 
         for bean in kwargs.values():
-            db.add(bean)
+            db.session.add(bean)
 
-        db.commit()
+        db.session.commit()
 
     @staticmethod
     def retrieve():
@@ -29,13 +29,13 @@ class Manager(object):
     @staticmethod
     def update(**kwargs):
         Manager.check_none(**kwargs)
-        db.commit()
+        db.session.commit()
 
     @staticmethod
     def delete(**kwargs):
         Manager.check_none(**kwargs)
 
         for bean in kwargs.values():
-            db.delete(bean)
+            db.session.delete(bean)
 
-        db.commit()
+        db.session.commit()

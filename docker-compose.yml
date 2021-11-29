@@ -5,7 +5,7 @@
 version: "3.6"
 
 services:
-  db:
+  db_messages:
     image: postgres:13
     restart: unless-stopped
     volumes:
@@ -16,11 +16,11 @@ services:
     env_file:
       - env_file
 
-  mib_lottery:
+  mib_messages:
     <<:
       # Building the image
-      &mib_lottery
-      image: "mib-lottery:latest"
+      &mib_messages
+      image: "mib-messages:latest"
       build:
         context: .
         dockerfile: Dockerfile
@@ -30,9 +30,25 @@ services:
     env_file:
       - env_file
     environment:
-      - POSTGRES_HOST=db
+      - POSTGRES_HOST=db_messages
     depends_on:
-      - db
+      - db_messages
+      - migrations_messages
+
+  
+  migrations_messages:
+    #
+    # this service is used to apply migrations on db
+    #
+    <<: *mib_messages
+    command: flask db upgrade
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db
+    restart: on-failure
+    depends_on:
+      - db_messages
 
 # Declaring all volumes
 volumes:
