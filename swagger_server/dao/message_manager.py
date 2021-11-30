@@ -15,6 +15,10 @@ class MessageManager(Manager):
         return Message.query.get(id_)
     
     @staticmethod
+    def retrieve_all():
+        return Message.query.all()
+    
+    @staticmethod
     def delete_message(message: Message):
         Manager.delete(message=message)
     

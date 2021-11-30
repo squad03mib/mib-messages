@@ -25,7 +25,7 @@ logger = None
 def create_app():
     """
     This method create the Flask application.
-    :return: Flask App Object
+    :return: Flask App object
     """
     global db
     global app
@@ -99,7 +99,7 @@ def init_logger():
 def register_specifications(_api_app):
     """
     This function registers all resources in the flask application
-    :param _api_app: Flask Application Object
+    :param _api_app: Flask Application object
     :return: None
     """
 

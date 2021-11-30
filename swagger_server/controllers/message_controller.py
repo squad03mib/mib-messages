@@ -37,8 +37,12 @@ def mib_resources_message_get_all_messages(type):  # noqa: E501
 
     :rtype: List[Message]
     """
-    return 'do some magic!'
+    message_list = []
 
+    for msg in MessageManager.retrieve_all():
+        message_list.append(Message.from_dict(msg.serialize()).to_dict())
+
+    return message_list
 
 def mib_resources_message_get_message(message_id):  # noqa: E501
     """mib_resources_message_get_message
@@ -77,16 +81,19 @@ def mib_resources_message_send_message(body):  # noqa: E501
     if connexion.request.is_json:
         body = MessagePost.from_dict(connexion.request.get_json())  # noqa: E501
     
-    message_db = Message_db()
-    message_db.id_sender = body.id_sender
-    message_db.id_receiver = body.recipients_list[0]
-    message_db.date_delivery = datetime.fromisoformat(body.date_delivery)
-    message_db.text = body.text
+    message_db = None
 
-    message_db.date_send = datetime.now()
-    message_db = MessageManager.create_message(message_db)
+    for recipient in body.recipients_list:
+        message_db = Message_db()
+        message_db.id_sender = body.id_sender
+        message_db.id_recipient = recipient
+        message_db.date_delivery = datetime.fromisoformat(body.date_delivery)
+        message_db.text = body.text
+
+        message_db.date_send = datetime.now()
+        message_db = MessageManager.create_message(message_db)
+    
     return Message.from_dict(message_db.serialize()).to_dict(), 201
-
 
 def mib_resources_message_withdraw_message(message_id):  # noqa: E501
     """mib_resources_message_withdraw_message

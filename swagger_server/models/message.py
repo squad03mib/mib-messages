@@ -14,15 +14,15 @@ class Message(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_message: int=None, id_sender: int=None, recipients_list: List[object]=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: str=None, date_send: str=None):  # noqa: E501
+    def __init__(self, id_message: int=None, id_sender: int=None, id_recipient: int=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: str=None, date_send: str=None):  # noqa: E501
         """Message - a model defined in Swagger
 
         :param id_message: The id_message of this Message.  # noqa: E501
         :type id_message: int
         :param id_sender: The id_sender of this Message.  # noqa: E501
         :type id_sender: int
-        :param recipients_list: The recipients_list of this Message.  # noqa: E501
-        :type recipients_list: List[object]
+        :param id_recipient: The id_recipient of this Message.  # noqa: E501
+        :type id_recipient: int
         :param text: The text of this Message.  # noqa: E501
         :type text: str
         :param message_delivered: The message_delivered of this Message.  # noqa: E501
@@ -37,7 +37,7 @@ class Message(Model):
         self.swagger_types = {
             'id_message': int,
             'id_sender': int,
-            'recipients_list': List[object],
+            'id_recipient': int,
             'text': str,
             'message_delivered': bool,
             'message_read': bool,
@@ -48,7 +48,7 @@ class Message(Model):
         self.attribute_map = {
             'id_message': 'id_message',
             'id_sender': 'id_sender',
-            'recipients_list': 'recipients_list',
+            'id_recipient': 'id_recipient',
             'text': 'text',
             'message_delivered': 'message_delivered',
             'message_read': 'message_read',
@@ -57,7 +57,7 @@ class Message(Model):
         }
         self._id_message = id_message
         self._id_sender = id_sender
-        self._recipients_list = recipients_list
+        self._id_recipient = id_recipient
         self._text = text
         self._message_delivered = message_delivered
         self._message_read = message_read
@@ -126,29 +126,27 @@ class Message(Model):
         self._id_sender = id_sender
 
     @property
-    def recipients_list(self) -> List[object]:
-        """Gets the recipients_list of this Message.
+    def id_recipient(self) -> int:
+        """Gets the id_recipient of this Message.
 
-        List of recipients IDs  # noqa: E501
+        Recipients ID  # noqa: E501
 
-        :return: The recipients_list of this Message.
-        :rtype: List[object]
+        :return: The id_recipient of this Message.
+        :rtype: int
         """
-        return self._recipients_list
+        return self._id_recipient
 
-    @recipients_list.setter
-    def recipients_list(self, recipients_list: List[object]):
-        """Sets the recipients_list of this Message.
+    @id_recipient.setter
+    def id_recipient(self, id_recipient: int):
+        """Sets the id_recipient of this Message.
 
-        List of recipients IDs  # noqa: E501
+        Recipients ID  # noqa: E501
 
-        :param recipients_list: The recipients_list of this Message.
-        :type recipients_list: List[object]
+        :param id_recipient: The id_recipient of this Message.
+        :type id_recipient: int
         """
-        if recipients_list is None:
-            raise ValueError("Invalid value for `recipients_list`, must not be `None`")  # noqa: E501
 
-        self._recipients_list = recipients_list
+        self._id_recipient = id_recipient
 
     @property
     def text(self) -> str:
