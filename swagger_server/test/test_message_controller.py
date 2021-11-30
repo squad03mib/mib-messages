@@ -29,7 +29,7 @@ class TestMessageController(BaseTestCase):
             method='POST',
             data=json.dumps(body.to_dict()),
             content_type='application/json')
-        assert response.status_code == 200
+        assert response.status_code == 201
         return int(response.json["id_message"])
     
     
@@ -62,7 +62,7 @@ class TestMessageController(BaseTestCase):
         
         """
         response = self.client.open(
-            '/messages/{message_id}'.format(message_id=1),
+            '/messages/{message_id}'.format(message_id=999),
             method='GET')
         assert response.status_code == 404
     
