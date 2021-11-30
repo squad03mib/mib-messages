@@ -81,6 +81,9 @@ def mib_resources_message_send_message(body):  # noqa: E501
     if connexion.request.is_json:
         body = MessagePost.from_dict(connexion.request.get_json())  # noqa: E501
     
+    return mib_resources_message_send_message_internal(body)
+
+def mib_resources_message_send_message_internal(body):
     message_db = None
 
     for recipient in body.recipients_list:
@@ -105,7 +108,7 @@ def mib_resources_message_withdraw_message(message_id):  # noqa: E501
 
     :rtype: None
     """
-    message : Message = MessageManager.retrieve_by_id(message_id)
+    message = MessageManager.retrieve_by_id(message_id)
     if message is None:
         abort(404)
     elif message.message_delivered:

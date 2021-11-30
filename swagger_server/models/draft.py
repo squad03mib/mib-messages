@@ -14,55 +14,40 @@ class Draft(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_message: int=None, id_sender: int=None, recipients_list: List[object]=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: str=None, date_send: str=None):  # noqa: E501
+    def __init__(self, id_draft: int=None, id_sender: int=None, recipients_list: List[object]=None, text: str=None, date_delivery: str=None):  # noqa: E501
         """Draft - a model defined in Swagger
 
-        :param id_message: The id_message of this Draft.  # noqa: E501
-        :type id_message: int
+        :param id_draft: The id_draft of this Draft.  # noqa: E501
+        :type id_draft: int
         :param id_sender: The id_sender of this Draft.  # noqa: E501
         :type id_sender: int
         :param recipients_list: The recipients_list of this Draft.  # noqa: E501
         :type recipients_list: List[object]
         :param text: The text of this Draft.  # noqa: E501
         :type text: str
-        :param message_delivered: The message_delivered of this Draft.  # noqa: E501
-        :type message_delivered: bool
-        :param message_read: The message_read of this Draft.  # noqa: E501
-        :type message_read: bool
         :param date_delivery: The date_delivery of this Draft.  # noqa: E501
         :type date_delivery: str
-        :param date_send: The date_send of this Draft.  # noqa: E501
-        :type date_send: str
         """
         self.swagger_types = {
-            'id_message': int,
+            'id_draft': int,
             'id_sender': int,
             'recipients_list': List[object],
             'text': str,
-            'message_delivered': bool,
-            'message_read': bool,
-            'date_delivery': str,
-            'date_send': str
+            'date_delivery': str
         }
 
         self.attribute_map = {
-            'id_message': 'id_message',
+            'id_draft': 'id_draft',
             'id_sender': 'id_sender',
             'recipients_list': 'recipients_list',
             'text': 'text',
-            'message_delivered': 'message_delivered',
-            'message_read': 'message_read',
-            'date_delivery': 'date_delivery',
-            'date_send': 'date_send'
+            'date_delivery': 'date_delivery'
         }
-        self._id_message = id_message
+        self._id_draft = id_draft
         self._id_sender = id_sender
         self._recipients_list = recipients_list
         self._text = text
-        self._message_delivered = message_delivered
-        self._message_read = message_read
         self._date_delivery = date_delivery
-        self._date_send = date_send
 
     @classmethod
     def from_dict(cls, dikt) -> 'Draft':
@@ -76,29 +61,29 @@ class Draft(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id_message(self) -> int:
-        """Gets the id_message of this Draft.
+    def id_draft(self) -> int:
+        """Gets the id_draft of this Draft.
 
-        Message ID  # noqa: E501
+        Draft ID  # noqa: E501
 
-        :return: The id_message of this Draft.
+        :return: The id_draft of this Draft.
         :rtype: int
         """
-        return self._id_message
+        return self._id_draft
 
-    @id_message.setter
-    def id_message(self, id_message: int):
-        """Sets the id_message of this Draft.
+    @id_draft.setter
+    def id_draft(self, id_draft: int):
+        """Sets the id_draft of this Draft.
 
-        Message ID  # noqa: E501
+        Draft ID  # noqa: E501
 
-        :param id_message: The id_message of this Draft.
-        :type id_message: int
+        :param id_draft: The id_draft of this Draft.
+        :type id_draft: int
         """
-        if id_message is None:
-            raise ValueError("Invalid value for `id_message`, must not be `None`")  # noqa: E501
+        if id_draft is None:
+            raise ValueError("Invalid value for `id_draft`, must not be `None`")  # noqa: E501
 
-        self._id_message = id_message
+        self._id_draft = id_draft
 
     @property
     def id_sender(self) -> int:
@@ -145,8 +130,6 @@ class Draft(Model):
         :param recipients_list: The recipients_list of this Draft.
         :type recipients_list: List[object]
         """
-        if recipients_list is None:
-            raise ValueError("Invalid value for `recipients_list`, must not be `None`")  # noqa: E501
 
         self._recipients_list = recipients_list
 
@@ -176,56 +159,6 @@ class Draft(Model):
         self._text = text
 
     @property
-    def message_delivered(self) -> bool:
-        """Gets the message_delivered of this Draft.
-
-        flag for message delivery  # noqa: E501
-
-        :return: The message_delivered of this Draft.
-        :rtype: bool
-        """
-        return self._message_delivered
-
-    @message_delivered.setter
-    def message_delivered(self, message_delivered: bool):
-        """Sets the message_delivered of this Draft.
-
-        flag for message delivery  # noqa: E501
-
-        :param message_delivered: The message_delivered of this Draft.
-        :type message_delivered: bool
-        """
-        if message_delivered is None:
-            raise ValueError("Invalid value for `message_delivered`, must not be `None`")  # noqa: E501
-
-        self._message_delivered = message_delivered
-
-    @property
-    def message_read(self) -> bool:
-        """Gets the message_read of this Draft.
-
-        flag for message read  # noqa: E501
-
-        :return: The message_read of this Draft.
-        :rtype: bool
-        """
-        return self._message_read
-
-    @message_read.setter
-    def message_read(self, message_read: bool):
-        """Sets the message_read of this Draft.
-
-        flag for message read  # noqa: E501
-
-        :param message_read: The message_read of this Draft.
-        :type message_read: bool
-        """
-        if message_read is None:
-            raise ValueError("Invalid value for `message_read`, must not be `None`")  # noqa: E501
-
-        self._message_read = message_read
-
-    @property
     def date_delivery(self) -> str:
         """Gets the date_delivery of this Draft.
 
@@ -245,32 +178,5 @@ class Draft(Model):
         :param date_delivery: The date_delivery of this Draft.
         :type date_delivery: str
         """
-        if date_delivery is None:
-            raise ValueError("Invalid value for `date_delivery`, must not be `None`")  # noqa: E501
 
         self._date_delivery = date_delivery
-
-    @property
-    def date_send(self) -> str:
-        """Gets the date_send of this Draft.
-
-        date of send  # noqa: E501
-
-        :return: The date_send of this Draft.
-        :rtype: str
-        """
-        return self._date_send
-
-    @date_send.setter
-    def date_send(self, date_send: str):
-        """Sets the date_send of this Draft.
-
-        date of send  # noqa: E501
-
-        :param date_send: The date_send of this Draft.
-        :type date_send: str
-        """
-        if date_send is None:
-            raise ValueError("Invalid value for `date_send`, must not be `None`")  # noqa: E501
-
-        self._date_send = date_send

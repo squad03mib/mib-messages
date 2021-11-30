@@ -145,6 +145,8 @@ class Message(Model):
         :param id_recipient: The id_recipient of this Message.
         :type id_recipient: int
         """
+        if id_recipient is None:
+            raise ValueError("Invalid value for `id_recipient`, must not be `None`")  # noqa: E501
 
         self._id_recipient = id_recipient
 

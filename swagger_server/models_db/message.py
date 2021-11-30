@@ -1,4 +1,3 @@
-from flask_sqlalchemy import SQLAlchemy
 from swagger_server import db
 
 class Message(db.Model):

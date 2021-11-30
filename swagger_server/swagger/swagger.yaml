@@ -52,6 +52,10 @@ paths:
       responses:
         "201":
           description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
         default:
           description: Error processing the message
       x-openapi-router-controller: swagger_server.controllers.message_controller
@@ -75,6 +79,10 @@ paths:
       responses:
         "200":
           description: Return message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
         "404":
           description: Message not found
         default:
@@ -163,6 +171,10 @@ paths:
       responses:
         "201":
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Draft'
         default:
           description: Error saving the draft
       x-openapi-router-controller: swagger_server.controllers.draft_controller
@@ -186,6 +198,10 @@ paths:
       responses:
         "200":
           description: Return draft
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Draft'
         "404":
           description: Draft not found
         default:
@@ -240,6 +256,7 @@ paths:
         default:
           description: Error processing the draft
       x-openapi-router-controller: swagger_server.controllers.draft_controller
+
 components:
   schemas:
     Message:
@@ -332,19 +349,14 @@ components:
     
     Draft:
       required:
-      - date_delivery
-      - date_send
-      - id_message
+      - id_draft
       - id_sender
-      - message_delivered
-      - message_read
-      - recipients_list
       - text
       type: object
       properties:
-        id_message:
+        id_draft:
           type: integer
-          description: Message ID
+          description: Draft ID
           example: 0
         id_sender:
           type: integer
@@ -359,30 +371,14 @@ components:
           type: string
           description: Message text
           example: "Hi, how are you ?"
-        message_delivered:
-          type: boolean
-          description: flag for message delivery
-          example: false
-        message_read:
-          type: boolean
-          description: flag for message read
-          example: false
         date_delivery:
           type: string
           description: date of delivery
           format: datetime
           example: 2021-11-23T00:00:00.000+00:00
-        date_send:
-          type: string
-          description: date of send
-          format: datetime
-          example: 2021-11-23T00:00:00.000+00:00
       example:
-        date_send: 2021-11-23T00:00:00.000+00:00
-        id_message: 0
+        id_draft: 0
         date_delivery: 2021-11-24T00:00:00.000+00:00
-        message_delivered: false
-        message_read: false
         recipients_list:
         - 2
         - 3
