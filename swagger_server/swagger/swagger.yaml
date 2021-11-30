@@ -266,7 +266,7 @@ components:
           type: array
           description: List of recipients IDs
           items:
-            example: "2, 3"
+            example: 2
         text:
           type: string
           description: Message text
@@ -296,8 +296,8 @@ components:
         message_delivered: false
         message_read: false
         recipients_list:
-        - "2, 3"
-        - "2, 3"
+        - 2
+        - 3
         text: "Hi, how are you ?"
         id_sender: 1
     Message_post:
@@ -315,7 +315,7 @@ components:
           type: array
           description: List of recipients IDs
           items:
-            example: "2, 3"
+            example: 2
         text:
           type: string
           description: Message text
@@ -328,8 +328,8 @@ components:
       example:
         date_delivery: 2021-11-24T00:00:00.000+00:00
         recipients_list:
-        - "2, 3"
-        - "2, 3"
+        - 2
+        - 3
         text: "Hi, how are you ?"
         id_sender: 1
     
@@ -357,7 +357,7 @@ components:
           type: array
           description: List of recipients IDs
           items:
-            example: "2, 3"
+            example: 2
         text:
           type: string
           description: Message text
@@ -387,8 +387,8 @@ components:
         message_delivered: false
         message_read: false
         recipients_list:
-        - "2, 3"
-        - "2, 3"
+        - 2
+        - 3
         text: "Hi, how are you ?"
         id_sender: 1
 
@@ -405,7 +405,7 @@ components:
           type: array
           description: List of recipients IDs
           items:
-            example: "2, 3"
+            example: 2
         text:
           type: string
           description: Message text
@@ -418,7 +418,7 @@ components:
       example:
         date_delivery: 2021-11-24T00:00:00.000+00:00
         recipients_list:
-        - "2, 3"
-        - "2, 3"
+        - 2
+        - 3
         text: "Hi, how are you ?"
         id_sender: 1
