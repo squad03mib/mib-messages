@@ -11,6 +11,8 @@ from swagger_server.dao.attachment_manager import AttachmentManager
 from swagger_server.models_db.attachment import Attachment as Attachment_db
 from flask import abort, request
 
+import pytz
+
 
 def mib_resources_message_delete_message(message_id):  # noqa: E501
     """mib_resources_message_delete_message
@@ -49,6 +51,8 @@ def mib_resources_message_get_all_messages(type):  # noqa: E501
             message.attachment_list = []
             for attachment in attachment_list:
                 message.attachment_list.append(attachment.data)
+        message.text+=' - delivered: '
+        message.text+= 'True' if msg.message_delivered else 'False'
         message_list.append(message.to_dict())
 
     return message_list
@@ -117,6 +121,9 @@ def mib_resources_message_send_message_internal(body):
                 attachment_db.id_message = message_db.id_message
                 attachment_db.data = attachment
                 AttachmentManager.create_attachment(attachment_db)
+        
+        from swagger_server.background import send_message as send_message_task
+        send_message_task.apply_async((message_db.id_message,), eta=message_db.date_delivery.astimezone(pytz.UTC))
     
     return Message.from_dict(message_db.serialize()).to_dict(), 201
 

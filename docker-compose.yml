@@ -16,6 +16,12 @@ services:
     env_file:
       - env_file
 
+  redis_messages:
+    image: redis
+    ports:
+    - "6389:6389"
+    #- "6379:6379"
+
   mib_messages:
     <<:
       # Building the image
@@ -31,9 +37,12 @@ services:
       - env_file
     environment:
       - POSTGRES_HOST=db_messages
+      - BROKER_URL=redis://redis_messages
+      - RESULT_BACKEND=redis://redis_messages
     depends_on:
       - db_messages
       - migrations_messages
+      - redis_messages
 
   
   migrations_messages:
@@ -49,6 +58,19 @@ services:
     restart: on-failure
     depends_on:
       - db_messages
+  
+  celery_worker_messages:
+    <<: *mib_messages
+    command: ['celery', '-A', 'swagger_server.background', 'worker', '--loglevel=DEBUG']
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db_messages
+      - BROKER_URL=redis://redis_messages
+      - RESULT_BACKEND=redis://redis_messages
+    depends_on:
+      - db_messages
+      - redis_messages
 
 # Declaring all volumes
 volumes:

@@ -9,8 +9,8 @@ class Attachment(db.Model):
     SERIALIZE_LIST = ['id', 'id_message', 'id_draft', 'data']
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_message = db.Column(db.Unicode(128), ForeignKey('message.id_message'))
-    id_draft = db.Column(db.Unicode(128), ForeignKey('draft.id_draft'))
+    id_message = db.Column(db.Integer, ForeignKey('message.id_message'))
+    id_draft = db.Column(db.Integer, ForeignKey('draft.id_draft'))
     data = db.Column(db.Unicode(128))
 
     def __init__(self, *args, **kw):
