@@ -305,6 +305,13 @@ components:
           description: date of send
           format: datetime
           example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
       example:
         date_send: 2021-11-23T00:00:00.000+00:00
         id_message: 0
@@ -314,6 +321,9 @@ components:
         id_recipient: 2
         text: "Hi, how are you ?"
         id_sender: 1
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"
+
     Message_post:
       required:
       - date_delivery
@@ -385,6 +395,13 @@ components:
           description: date of delivery
           format: datetime
           example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
       example:
         id_draft: 0
         date_delivery: 2021-11-24T00:00:00.000+00:00
@@ -393,6 +410,8 @@ components:
         - 3
         text: "Hi, how are you ?"
         id_sender: 1
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"
 
     Draft_post:
       required:

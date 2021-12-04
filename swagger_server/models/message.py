@@ -14,7 +14,7 @@ class Message(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_message: int=None, id_sender: int=None, id_recipient: int=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: str=None, date_send: str=None):  # noqa: E501
+    def __init__(self, id_message: int=None, id_sender: int=None, id_recipient: int=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: str=None, date_send: str=None, attachment_list: List[object]=None):  # noqa: E501
         """Message - a model defined in Swagger
 
         :param id_message: The id_message of this Message.  # noqa: E501
@@ -33,6 +33,8 @@ class Message(Model):
         :type date_delivery: str
         :param date_send: The date_send of this Message.  # noqa: E501
         :type date_send: str
+        :param attachment_list: The attachment_list of this Message.  # noqa: E501
+        :type attachment_list: List[object]
         """
         self.swagger_types = {
             'id_message': int,
@@ -42,7 +44,8 @@ class Message(Model):
             'message_delivered': bool,
             'message_read': bool,
             'date_delivery': str,
-            'date_send': str
+            'date_send': str,
+            'attachment_list': List[object]
         }
 
         self.attribute_map = {
@@ -53,7 +56,8 @@ class Message(Model):
             'message_delivered': 'message_delivered',
             'message_read': 'message_read',
             'date_delivery': 'date_delivery',
-            'date_send': 'date_send'
+            'date_send': 'date_send',
+            'attachment_list': 'attachment_list'
         }
         self._id_message = id_message
         self._id_sender = id_sender
@@ -63,6 +67,7 @@ class Message(Model):
         self._message_read = message_read
         self._date_delivery = date_delivery
         self._date_send = date_send
+        self._attachment_list = attachment_list
 
     @classmethod
     def from_dict(cls, dikt) -> 'Message':
@@ -274,3 +279,26 @@ class Message(Model):
             raise ValueError("Invalid value for `date_send`, must not be `None`")  # noqa: E501
 
         self._date_send = date_send
+
+    @property
+    def attachment_list(self) -> List[object]:
+        """Gets the attachment_list of this Message.
+
+        list of attachment files base64 encoded  # noqa: E501
+
+        :return: The attachment_list of this Message.
+        :rtype: List[object]
+        """
+        return self._attachment_list
+
+    @attachment_list.setter
+    def attachment_list(self, attachment_list: List[object]):
+        """Sets the attachment_list of this Message.
+
+        list of attachment files base64 encoded  # noqa: E501
+
+        :param attachment_list: The attachment_list of this Message.
+        :type attachment_list: List[object]
+        """
+
+        self._attachment_list = attachment_list

@@ -29,6 +29,7 @@ def mib_resources_draft_delete_draft(draft_id):  # noqa: E501
     if draft is None:
         abort(404)
     else:
+        AttachmentManager.delete_attachment_by_draft_id(draft_id)
         DraftManager.delete_draft(draft)
         return "", 202
 
@@ -43,8 +44,14 @@ def mib_resources_draft_get_all_drafts():  # noqa: E501
     """
     draft_list = []
 
-    for draft in DraftManager.retrieve_all():
-        draft_list.append(Draft.from_dict(draft.serialize()).to_dict())
+    for draft_db in DraftManager.retrieve_all():
+        draft : DraftManager = Draft.from_dict(draft_db.serialize())
+        attachment_list = AttachmentManager.retrieve_by_draft_id(draft_db.id_draft)
+        if attachment_list is not None:
+            draft.attachment_list = []
+            for attachment in attachment_list:
+                draft.attachment_list.append(attachment.data)
+        draft_list.append(draft.to_dict())
 
     return draft_list
 
@@ -59,11 +66,17 @@ def mib_resources_draft_get_draft(draft_id):  # noqa: E501
 
     :rtype: None
     """
-    draft : Draft_db = DraftManager.retrieve_by_id(draft_id)
-    if draft is None:
+    draft_db : Draft_db = DraftManager.retrieve_by_id(draft_id)
+    if draft_db is None:
         abort(404)
     else:
-        return Draft.from_dict(draft.serialize()).to_dict(), 200
+        draft : Draft = Draft.from_dict(draft_db.serialize())
+        attachment_list = AttachmentManager.retrieve_by_draft_id(draft_id)
+        if attachment_list is not None:
+            draft.attachment_list = []
+            for attachment in attachment_list:
+                draft.attachment_list.append(attachment.data)
+        return draft.to_dict(), 200
 
 
 def mib_resources_draft_save_draft(body):  # noqa: E501

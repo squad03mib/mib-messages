@@ -26,6 +26,7 @@ def mib_resources_message_delete_message(message_id):  # noqa: E501
     if msg is None:
         abort(404)
     else:
+        AttachmentManager.delete_attachment_by_message_id(message_id)
         MessageManager.delete_message(msg)
         return "", 202
 
@@ -42,7 +43,13 @@ def mib_resources_message_get_all_messages(type):  # noqa: E501
     message_list = []
 
     for msg in MessageManager.retrieve_all():
-        message_list.append(Message.from_dict(msg.serialize()).to_dict())
+        message : Message = Message.from_dict(msg.serialize())
+        attachment_list = AttachmentManager.retrieve_by_message_id(msg.id_message)
+        if attachment_list is not None:
+            message.attachment_list = []
+            for attachment in attachment_list:
+                message.attachment_list.append(attachment.data)
+        message_list.append(message.to_dict())
 
     return message_list
 
@@ -68,7 +75,13 @@ def mib_resources_message_get_message(message_id):  # noqa: E501
         # if message contains bad words they are not showed
         #if int(msg.id_sender) != current_user.id:
         #    msg.text = purify_message(msg.text)
-        return Message.from_dict(msg.serialize()).to_dict(), 200
+        message : Message = Message.from_dict(msg.serialize())
+        attachment_list = AttachmentManager.retrieve_by_message_id(message_id)
+        if attachment_list is not None:
+            message.attachment_list = []
+            for attachment in attachment_list:
+                message.attachment_list.append(attachment.data)
+        return message.to_dict(), 200
 
 def mib_resources_message_send_message(body):  # noqa: E501
     """Send a new message
@@ -123,5 +136,6 @@ def mib_resources_message_withdraw_message(message_id):  # noqa: E501
     elif message.message_delivered:
         abort(404)
     else:
+        AttachmentManager.delete_attachment_by_message_id(message_id)
         MessageManager.delete_message(message)
         return "", 200
