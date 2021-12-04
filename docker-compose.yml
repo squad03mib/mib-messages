@@ -72,6 +72,19 @@ services:
       - db_messages
       - redis_messages
 
+  celery_beat_messages:
+    <<: *mib_messages
+    command: ['celery', '-A', 'swagger_server.background', 'beat', '--loglevel=DEBUG']
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db_messages
+      - BROKER_URL=redis://redis_messages
+      - RESULT_BACKEND=redis://redis_messages
+    depends_on:
+      - db_messages
+      - redis_messages
+
 # Declaring all volumes
 volumes:
   pgdata: null # for maintaing db data
