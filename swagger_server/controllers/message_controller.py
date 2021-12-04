@@ -7,7 +7,9 @@ from swagger_server.models.message_post import MessagePost  # noqa: E501
 from swagger_server import util
 from swagger_server.dao.message_manager import MessageManager
 from swagger_server.models_db.message import Message as Message_db
-from flask import abort
+from swagger_server.dao.attachment_manager import AttachmentManager
+from swagger_server.models_db.attachment import Attachment as Attachment_db
+from flask import abort, request
 
 
 def mib_resources_message_delete_message(message_id):  # noqa: E501
@@ -95,6 +97,13 @@ def mib_resources_message_send_message_internal(body):
 
         message_db.date_send = datetime.now()
         message_db = MessageManager.create_message(message_db)
+
+        if body.attachment_list is not None:
+            for attachment in body.attachment_list:
+                attachment_db = Attachment_db()
+                attachment_db.id_message = message_db.id_message
+                attachment_db.data = attachment
+                AttachmentManager.create_attachment(attachment_db)
     
     return Message.from_dict(message_db.serialize()).to_dict(), 201
 

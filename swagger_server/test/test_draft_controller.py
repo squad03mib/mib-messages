@@ -24,6 +24,7 @@ class TestDraftController(BaseTestCase):
         body.recipients_list = [1]
         body.date_delivery = datetime.now().isoformat()
         body.text = "test"
+        body.attachment_list = ["wjfklsjfkljfklsdjfklsjklfj"]
         response = self.client.open(
             '/drafts',
             method='POST',

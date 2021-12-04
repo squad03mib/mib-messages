@@ -339,6 +339,13 @@ components:
           description: date of delivery
           format: datetime
           example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
       example:
         date_delivery: 2021-11-24T00:00:00.000+00:00
         recipients_list:
@@ -346,6 +353,8 @@ components:
         - 3
         text: "Hi, how are you ?"
         id_sender: 1
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"
     
     Draft:
       required:
@@ -408,6 +417,13 @@ components:
           description: date of delivery
           format: datetime
           example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
       example:
         date_delivery: 2021-11-24T00:00:00.000+00:00
         recipients_list:
@@ -415,3 +431,5 @@ components:
         - 3
         text: "Hi, how are you ?"
         id_sender: 1
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"

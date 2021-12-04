@@ -14,7 +14,7 @@ class MessagePost(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_sender: int=None, recipients_list: List[object]=None, text: str=None, date_delivery: str=None):  # noqa: E501
+    def __init__(self, id_sender: int=None, recipients_list: List[object]=None, text: str=None, date_delivery: str=None, attachment_list: List[object]=None):  # noqa: E501
         """MessagePost - a model defined in Swagger
 
         :param id_sender: The id_sender of this MessagePost.  # noqa: E501
@@ -25,24 +25,29 @@ class MessagePost(Model):
         :type text: str
         :param date_delivery: The date_delivery of this MessagePost.  # noqa: E501
         :type date_delivery: str
+        :param attachment_list: The attachment_list of this MessagePost.  # noqa: E501
+        :type attachment_list: List[object]
         """
         self.swagger_types = {
             'id_sender': int,
             'recipients_list': List[object],
             'text': str,
-            'date_delivery': str
+            'date_delivery': str,
+            'attachment_list': List[object]
         }
 
         self.attribute_map = {
             'id_sender': 'id_sender',
             'recipients_list': 'recipients_list',
             'text': 'text',
-            'date_delivery': 'date_delivery'
+            'date_delivery': 'date_delivery',
+            'attachment_list': 'attachment_list'
         }
         self._id_sender = id_sender
         self._recipients_list = recipients_list
         self._text = text
         self._date_delivery = date_delivery
+        self._attachment_list = attachment_list
 
     @classmethod
     def from_dict(cls, dikt) -> 'MessagePost':
@@ -152,3 +157,26 @@ class MessagePost(Model):
             raise ValueError("Invalid value for `date_delivery`, must not be `None`")  # noqa: E501
 
         self._date_delivery = date_delivery
+
+    @property
+    def attachment_list(self) -> List[object]:
+        """Gets the attachment_list of this MessagePost.
+
+        list of attachment files base64 encoded  # noqa: E501
+
+        :return: The attachment_list of this MessagePost.
+        :rtype: List[object]
+        """
+        return self._attachment_list
+
+    @attachment_list.setter
+    def attachment_list(self, attachment_list: List[object]):
+        """Sets the attachment_list of this MessagePost.
+
+        list of attachment files base64 encoded  # noqa: E501
+
+        :param attachment_list: The attachment_list of this MessagePost.
+        :type attachment_list: List[object]
+        """
+
+        self._attachment_list = attachment_list

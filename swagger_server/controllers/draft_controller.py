@@ -7,6 +7,8 @@ from swagger_server.models.draft_post import DraftPost  # noqa: E501
 from swagger_server import util
 from swagger_server.dao.draft_manager import DraftManager
 from swagger_server.models_db.draft import Draft as Draft_db
+from swagger_server.dao.attachment_manager import AttachmentManager
+from swagger_server.models_db.attachment import Attachment as Attachment_db
 from datetime import datetime
 from flask import abort
 import swagger_server.controllers.message_controller as MessageController
@@ -84,7 +86,14 @@ def mib_resources_draft_save_draft(body):  # noqa: E501
     draft_db.text = body.text
 
     draft_db = DraftManager.create_draft(draft_db)
-    
+
+    if body.attachment_list is not None:
+        for attachment in body.attachment_list:
+            attachment_db = Attachment_db()
+            attachment_db.id_draft = draft_db.id_draft
+            attachment_db.data = attachment
+            AttachmentManager.create_attachment(attachment_db)
+
     return Draft.from_dict(draft_db.serialize()).to_dict(), 201
 
 
@@ -107,6 +116,14 @@ def mib_resources_draft_send_draft(draft_id):  # noqa: E501
         msg_post.date_delivery = draft.date_delivery.isoformat()
         msg_post.id_sender = draft.id_sender
         msg_post.text = draft.text
+
+        attachment_list : Attachment_db = AttachmentManager.retrieve_by_draft_id(draft_id)
+        if attachment_list is not None:
+            msg_post.attachment_list = []
+            for attachment in attachment_list:
+                msg_post.attachment_list.append(attachment.data)
+
         (msg, _) = MessageController.mib_resources_message_send_message_internal(msg_post)
+        AttachmentManager.delete_attachment_by_draft_id(draft_id)
         DraftManager.delete_draft(draft)
         return msg, 200
