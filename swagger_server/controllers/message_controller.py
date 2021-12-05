@@ -14,7 +14,7 @@ from flask import abort, request
 import pytz
 
 
-def mib_resources_message_delete_message(message_id):  # noqa: E501
+def mib_resources_message_delete_message(current_user_id, message_id):  # noqa: E501
     """mib_resources_message_delete_message
 
     Delete a message by its id # noqa: E501
@@ -32,7 +32,7 @@ def mib_resources_message_delete_message(message_id):  # noqa: E501
         MessageManager.delete_message(msg)
         return "", 202
 
-def mib_resources_message_get_all_messages(type):  # noqa: E501
+def mib_resources_message_get_all_messages(current_user_id, type):  # noqa: E501
     """mib_resources_message_get_all_messages
 
     Get all messages list # noqa: E501
@@ -57,7 +57,7 @@ def mib_resources_message_get_all_messages(type):  # noqa: E501
 
     return message_list
 
-def mib_resources_message_get_message(message_id):  # noqa: E501
+def mib_resources_message_get_message(current_user_id, message_id):  # noqa: E501
     """mib_resources_message_get_message
 
     Get a message by its id # noqa: E501
@@ -87,7 +87,7 @@ def mib_resources_message_get_message(message_id):  # noqa: E501
                 message.attachment_list.append(attachment.data)
         return message.to_dict(), 200
 
-def mib_resources_message_send_message(body):  # noqa: E501
+def mib_resources_message_send_message(body, current_user_id):  # noqa: E501
     """Send a new message
 
      # noqa: E501
@@ -127,7 +127,7 @@ def mib_resources_message_send_message_internal(body):
     
     return Message.from_dict(message_db.serialize()).to_dict(), 201
 
-def mib_resources_message_withdraw_message(message_id):  # noqa: E501
+def mib_resources_message_withdraw_message(current_user_id, message_id):  # noqa: E501
     """mib_resources_message_withdraw_message
 
     Withdraw a sent message by its id # noqa: E501

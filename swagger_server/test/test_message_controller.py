@@ -24,11 +24,14 @@ class TestMessageController(BaseTestCase):
         body.recipients_list = [1]
         body.date_delivery = datetime.now().isoformat()
         body.text = "test"
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/messages',
             method='POST',
             data=json.dumps(body.to_dict()),
-            content_type='application/json')
+            content_type='application/json',
+            query_string=query_string)
         assert response.status_code == 201
         return int(response.json["id_message"])
     
@@ -39,9 +42,12 @@ class TestMessageController(BaseTestCase):
         Send and delete a message
         """
         id=self.send_test_message()
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/messages/{message_id}'.format(message_id=id),
-            method='DELETE')
+            method='DELETE',
+            query_string=query_string)
         assert response.status_code == 202
     
     def test_mib_resources_message_get_all_messages(self):
@@ -49,7 +55,7 @@ class TestMessageController(BaseTestCase):
 
         
         """
-        query_string = [('type', 'sent')]
+        query_string = [('type', 'sent'), ('current_user_id', 1)]
         response = self.client.open(
             '/messages',
             method='GET',
@@ -61,9 +67,12 @@ class TestMessageController(BaseTestCase):
 
         
         """
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/messages/{message_id}'.format(message_id=999),
-            method='GET')
+            method='GET',
+            query_string=query_string)
         assert response.status_code == 404
     
     def test_mib_resources_message_send_message(self):
@@ -76,11 +85,14 @@ class TestMessageController(BaseTestCase):
         body.recipients_list = [1]
         body.date_delivery = datetime.now().isoformat()
         body.text = "test"
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/messages',
             method='POST',
             data=json.dumps(body.to_dict()),
-            content_type='application/json')
+            content_type='application/json',
+            query_string=query_string)
         assert response.status_code == 201
     
     def test_mib_resources_message_get_message(self):
@@ -89,9 +101,12 @@ class TestMessageController(BaseTestCase):
         Send and retrieve a message
         """
         id=self.send_test_message()
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/messages/{message_id}'.format(message_id=id),
-            method='GET')
+            method='GET',
+            query_string=query_string)
         assert response.status_code == 200
     
     def test_mib_resources_message_withdraw_message(self):
@@ -100,8 +115,11 @@ class TestMessageController(BaseTestCase):
         Send and withdraw a message
         """
         id=self.send_test_message()
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/messages/{message_id}/withdraw'.format(message_id=id),
-            method='POST')
+            method='POST',
+            query_string=query_string)
         assert response.status_code == 200
     

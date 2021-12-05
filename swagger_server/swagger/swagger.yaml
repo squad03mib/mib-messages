@@ -13,6 +13,12 @@ paths:
       description: Get all messages list
       operationId: mib_resources_message_get_all_messages
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: type
         in: query
         description: The types of messages to retrieve
@@ -42,6 +48,13 @@ paths:
       - Message
       summary: Send a new message
       operationId: mib_resources_message_send_message
+      parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       requestBody:
         description: Create a new message and send it
         content:
@@ -66,6 +79,12 @@ paths:
       description: Get a message by its id
       operationId: mib_resources_message_get_message
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: message_id
         in: path
         description: Message Unique ID
@@ -94,6 +113,12 @@ paths:
       description: Delete a message by its id
       operationId: mib_resources_message_delete_message
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: message_id
         in: path
         description: Message Unique ID
@@ -119,6 +144,12 @@ paths:
       description: Withdraw a sent message by its id
       operationId: mib_resources_message_withdraw_message
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: message_id
         in: path
         description: Message Unique ID
@@ -143,6 +174,13 @@ paths:
       - Draft
       description: Get all drafts list
       operationId: mib_resources_draft_get_all_drafts
+      parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       responses:
         "200":
           description: Return drafts list
@@ -161,6 +199,13 @@ paths:
       - Draft
       summary: Create a new draft
       operationId: mib_resources_draft_save_draft
+      parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       requestBody:
         description: Create and save a new draft
         content:
@@ -185,6 +230,12 @@ paths:
       description: Get a draft by its id
       operationId: mib_resources_draft_get_draft
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: draft_id
         in: path
         description: Draft Unique ID
@@ -213,6 +264,12 @@ paths:
       description: Delete a draft by its id
       operationId: mib_resources_draft_delete_draft
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: draft_id
         in: path
         description: Draft Unique ID
@@ -238,6 +295,12 @@ paths:
       description: Send a draft by its id
       operationId: mib_resources_draft_send_draft
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: draft_id
         in: path
         description: Draft Unique ID

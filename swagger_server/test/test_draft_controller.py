@@ -25,11 +25,14 @@ class TestDraftController(BaseTestCase):
         body.date_delivery = datetime.now().isoformat()
         body.text = "test"
         body.attachment_list = ["wjfklsjfkljfklsdjfklsjklfj"]
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts',
             method='POST',
             data=json.dumps(body.to_dict()),
-            content_type='application/json')
+            content_type='application/json',
+            query_string=query_string)
         assert response.status_code == 201
         return int(response.json["id_draft"])
 
@@ -39,9 +42,12 @@ class TestDraftController(BaseTestCase):
         
         """
         id=self.save_test_draft()
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts/{draft_id}'.format(draft_id=id),
-            method='DELETE')
+            method='DELETE',
+            query_string=query_string)
         assert response.status_code == 202
         
     def test_mib_resources_draft_get_all_drafts(self):
@@ -49,9 +55,12 @@ class TestDraftController(BaseTestCase):
 
         
         """
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts',
-            method='GET')
+            method='GET',
+            query_string=query_string)
         assert response.status_code == 200
         
     def test_mib_resources_draft_get_draft_404(self):
@@ -59,9 +68,12 @@ class TestDraftController(BaseTestCase):
 
         
         """
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts/{draft_id}'.format(draft_id=999),
-            method='GET')
+            method='GET',
+            query_string=query_string)
         assert response.status_code == 404
         
     def test_mib_resources_draft_save_draft(self):
@@ -74,11 +86,14 @@ class TestDraftController(BaseTestCase):
         body.recipients_list = [1]
         body.date_delivery = datetime.now().isoformat()
         body.text = "test"
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts',
             method='POST',
             data=json.dumps(body.to_dict()),
-            content_type='application/json')
+            content_type='application/json',
+            query_string=query_string)
         assert response.status_code == 201
         
     def test_mib_resources_draft_get_draft(self):
@@ -87,9 +102,12 @@ class TestDraftController(BaseTestCase):
         
         """
         id=self.save_test_draft()
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts/{draft_id}'.format(draft_id=id),
-            method='GET')
+            method='GET',
+            query_string=query_string)
         assert response.status_code == 200
     
     def test_mib_resources_draft_send_draft(self):
@@ -98,7 +116,10 @@ class TestDraftController(BaseTestCase):
         
         """
         id=self.save_test_draft()
+
+        query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts/{draft_id}/send'.format(draft_id=id),
-            method='POST')
+            method='POST',
+            query_string=query_string)
         assert response.status_code == 200

@@ -15,7 +15,7 @@ import swagger_server.controllers.message_controller as MessageController
 from swagger_server.models.message_post import MessagePost
 
 
-def mib_resources_draft_delete_draft(draft_id):  # noqa: E501
+def mib_resources_draft_delete_draft(current_user_id, draft_id):  # noqa: E501
     """mib_resources_draft_delete_draft
 
     Delete a draft by its id # noqa: E501
@@ -34,7 +34,7 @@ def mib_resources_draft_delete_draft(draft_id):  # noqa: E501
         return "", 202
 
 
-def mib_resources_draft_get_all_drafts():  # noqa: E501
+def mib_resources_draft_get_all_drafts(current_user_id):  # noqa: E501
     """mib_resources_draft_get_all_drafts
 
     Get all drafts list # noqa: E501
@@ -56,7 +56,7 @@ def mib_resources_draft_get_all_drafts():  # noqa: E501
     return draft_list
 
 
-def mib_resources_draft_get_draft(draft_id):  # noqa: E501
+def mib_resources_draft_get_draft(current_user_id, draft_id):  # noqa: E501
     """mib_resources_draft_get_draft
 
     Get a draft by its id # noqa: E501
@@ -79,7 +79,7 @@ def mib_resources_draft_get_draft(draft_id):  # noqa: E501
         return draft.to_dict(), 200
 
 
-def mib_resources_draft_save_draft(body):  # noqa: E501
+def mib_resources_draft_save_draft(body, current_user_id):  # noqa: E501
     """Create a new draft
 
      # noqa: E501
@@ -110,7 +110,7 @@ def mib_resources_draft_save_draft(body):  # noqa: E501
     return Draft.from_dict(draft_db.serialize()).to_dict(), 201
 
 
-def mib_resources_draft_send_draft(draft_id):  # noqa: E501
+def mib_resources_draft_send_draft(current_user_id, draft_id):  # noqa: E501
     """mib_resources_draft_send_draft
 
     Send a draft by its id # noqa: E501
