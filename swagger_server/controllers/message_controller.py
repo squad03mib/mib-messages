@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 import connexion
 import six
 
@@ -8,8 +9,8 @@ from swagger_server.dao.message_manager import MessageManager
 from swagger_server.models_db.message import Message as Message_db
 from swagger_server.dao.attachment_manager import AttachmentManager
 from swagger_server.models_db.attachment import Attachment as Attachment_db
-from swagger_server.models.user import User
-from swagger_server.rao.user_manager import UserManager
+from swagger_server.rao.user_manager import UserManager, BlackListItem
+from swagger_server.rao.lottery_manager import LotteryManager, LotteryInfo
 from flask import abort, request
 
 import pytz
@@ -118,7 +119,11 @@ def mib_resources_message_send_message_internal(body):
         message_db.date_delivery = datetime.fromisoformat(body.date_delivery)
         message_db.text = body.text
 
-        # TODO: check blacklist
+        #check blacklist
+        black_list :List[BlackListItem] = UserManager.get_blacklist(message_db.id_recipient)
+        for black_list_item in black_list:
+            if black_list_item.id_blacklisted == message_db.id_sender:
+                message_db.blacklisted = True
 
         message_db.date_send = datetime.now()
         message_db = MessageManager.create_message(message_db)
@@ -146,11 +151,12 @@ def mib_resources_message_withdraw_message(current_user_id, message_id):  # noqa
     :rtype: None
     """
     msg = MessageManager.retrieve_by_id(message_id)
+    lottery_info :LotteryInfo = LotteryManager.get_lottery_by_id_user(current_user_id)
     if msg is None:
         abort(404)
-    elif (msg.id_sender != current_user_id) and\
-         (msg.id_sender == current_user_id and msg.message_delivered):
-         # TODO: Check Lottery points
+    elif msg.id_sender != current_user_id or\
+         (msg.id_sender == current_user_id and msg.message_delivered) or\
+         lottery_info.points < 100:
         abort(403)
     else:
         AttachmentManager.delete_attachment_by_message_id(message_id)

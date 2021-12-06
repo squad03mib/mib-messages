@@ -1,6 +1,7 @@
 
 from datetime import date
 from swagger_server.models.user import User
+from swagger_server.models.black_list_item import BlackListItem
 from swagger_server import app
 from flask import abort
 import requests
@@ -206,3 +207,77 @@ class UserManager:
                 'Microservice users returned an invalid status code %s, and message %s'
                 % (response.status_code, json_response['error_message'])
             )
+
+    @classmethod
+    def get_all_users(cls):
+        user :User = User()
+        user.id = 1
+        user.firstname = "Mario"
+        user.lastname = "Rossi"
+        user.email = "example@example.com"
+        user.date_of_birth = date.fromisoformat('2001-01-01')
+        user.is_active = True
+        if cls.USERS_ENDPOINT is None:
+            return [user]
+        try:
+            url = "%s/users" % (cls.USERS_ENDPOINT)
+
+            response = requests.get(url, timeout=cls.REQUESTS_TIMEOUT_SECONDS)
+            json_payload = response.json()
+            users = None
+
+            if response.status_code == 200:
+                users = json_payload
+
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            return abort(500)
+
+        return users
+
+    @classmethod
+    def add_user_to_blacklist(cls, id_blacklisted: int, user_id :int):
+        black_list_item :BlackListItem = BlackListItem()
+        black_list_item.id_user = user_id
+        black_list_item.id_blacklisted = 2
+        if cls.USERS_ENDPOINT is None:
+            return black_list_item
+
+        try:
+            url = "%s/users/%s/blacklist" % (cls.USERS_ENDPOINT,
+                                             user_id)
+            response = requests.post(url,
+                                     json={
+                                         'id': id_blacklisted
+                                     },
+                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS
+                                     )
+
+            print(response)
+
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            return abort(500)
+
+        return response
+
+    @classmethod
+    def get_blacklist(cls, user_id: int):
+        black_list_item :BlackListItem = BlackListItem()
+        black_list_item.id_user = user_id
+        black_list_item.id_blacklisted = 2
+        if cls.USERS_ENDPOINT is None:
+            return [black_list_item]
+        try:
+            url = "%s/users/%s/blacklist" % (cls.USERS_ENDPOINT,
+                                             user_id)
+
+            response = requests.get(url, timeout=cls.REQUESTS_TIMEOUT_SECONDS)
+            json_payload = response.json()
+            blacklist = None
+
+            if response.status_code == 200:
+                blacklist = json_payload
+
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            return abort(500)
+
+        return blacklist

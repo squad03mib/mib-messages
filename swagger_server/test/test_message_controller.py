@@ -121,5 +121,5 @@ class TestMessageController(BaseTestCase):
             '/messages/{message_id}/withdraw'.format(message_id=id),
             method='POST',
             query_string=query_string)
-        assert response.status_code == 200
+        assert response.status_code == 403
     

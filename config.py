@@ -4,6 +4,7 @@ class Config(object):
     import os
     USERS_MS_URL = os.getenv('USERS_MS_URL', None)
     REQUESTS_TIMEOUT_SECONDS = os.getenv('REQUESTS_TIMEOUT_SECONDS', None)
+    LOTTERY_MS_URL = os.getenv('LOTTERY_MS_URL', None)
 
 
 class DebugConfig(Config):
