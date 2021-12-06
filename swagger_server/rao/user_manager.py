@@ -1,5 +1,7 @@
 
 from datetime import date
+import json
+from typing import List
 from swagger_server.models.user import User
 from swagger_server.models.black_list_item import BlackListItem
 from swagger_server import app
@@ -19,265 +21,51 @@ class UserManager:
         :param user_id: the user id
         :return: User obj with id=user_id
         """
-        user :User = User()
-        user.id = 1
-        user.firstname = "Mario"
-        user.lastname = "Rossi"
-        user.email = "example@example.com"
-        user.date_of_birth = date.fromisoformat('2001-01-01')
-        user.is_active = True
+        user :User = None
         if cls.USERS_ENDPOINT is None:
+            user = User()
+            user.id = 1
+            user.firstname = "Mario"
+            user.lastname = "Rossi"
+            user.email = "example@example.com"
+            user.date_of_birth = date.fromisoformat('2001-01-01')
+            user.is_active = True
             return user
         try:
             response = requests.get("%s/users/%s" % (cls.USERS_ENDPOINT, str(user_id)),
                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS)
-            json_payload = response.json()
+
             if response.status_code == 200:
-                # user is authenticated
-                user = User.build_from_json(json_payload)
-                print("risposta: ",user)
-            else:
-                raise RuntimeError('Server has sent an unrecognized status code %s' % response.status_code)
+                user = User.from_dict(json.loads(response.json()))
+            elif response.status_code != 404:
+                return abort(500)
 
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             return abort(500)
 
         return user
-
-    @classmethod
-    def get_user_by_email(cls, user_email: str):
-        """
-        This method contacts the users microservice
-        and retrieves the user object by user email.
-        :param user_email: the user email
-        :return: User obj with email=user_email
-        """
-        user :User = User()
-        user.id = 1
-        user.firstname = "Mario"
-        user.lastname = "Rossi"
-        user.email = "example@example.com"
-        user.date_of_birth = date.fromisoformat('2001-01-01')
-        user.is_active = True
-        if cls.USERS_ENDPOINT is None:
-            return user
-        try:
-            response = requests.get("%s/user_email/%s" % (cls.USERS_ENDPOINT, user_email),
-                                    timeout=cls.REQUESTS_TIMEOUT_SECONDS)
-            json_payload = response.json()
-            user = None
-
-            if response.status_code == 200:
-                user = User.build_from_json(json_payload)
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        return user
-
-    @classmethod
-    def create_user(cls,
-                    email: str, password: str,
-                    firstname: str, lastname: str,
-                    birthdate):
-        user :User = User()
-        user.id = 1
-        user.firstname = "Mario"
-        user.lastname = "Rossi"
-        user.email = "example@example.com"
-        user.date_of_birth = date.fromisoformat('2001-01-01')
-        user.is_active = True
-        if cls.USERS_ENDPOINT is None:
-            return user
-        try:
-            url = "%s/users" % cls.USERS_ENDPOINT
-            response = requests.post(url,
-                                     json={
-                                         'email': email,
-                                         'password': password,
-                                         'firstname': firstname,
-                                         'lastname': lastname,
-                                         'birthdate': birthdate,
-                                     },
-                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS
-                                     )
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        return response
-
-    @classmethod
-    def update_user(cls, user_id: int, email: str, password: str, phone: str):
-        """
-        This method contacts the users microservice
-        to allow the users to update their profiles
-        :param phone:
-        :param password:
-        :param email:
-        :param user_id: the customer id
-            email: the user email
-            password: the user password
-            phone: the user phone
-        :return: User updated
-        """
-        user :User = User()
-        user.id = 1
-        user.firstname = "Mario"
-        user.lastname = "Rossi"
-        user.email = "example@example.com"
-        user.date_of_birth = date.fromisoformat('2001-01-01')
-        user.is_active = True
-        if cls.USERS_ENDPOINT is None:
-            return user
-        try:
-            url = "%s/users/%s" % (cls.USERS_ENDPOINT, str(user_id))
-            response = requests.put(url,
-                                    json={
-                                        'email': email,
-                                        'password': password
-                                    },
-                                    timeout=cls.REQUESTS_TIMEOUT_SECONDS
-                                    )
-            return response
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        raise RuntimeError('Error with searching for the user %s' % user_id)
-
-    @classmethod
-    def delete_user(cls, user_id: int):
-        """
-        This method contacts the users microservice
-        to delete the account of the user
-        :param user_id: the user id
-        :return: User updated
-        """
-        if cls.USERS_ENDPOINT is None:
-            return
-        try:
-            logout_user()
-            url = "%s/users/%s" % (cls.USERS_ENDPOINT, str(user_id))
-            response = requests.delete(url, timeout=cls.REQUESTS_TIMEOUT_SECONDS)
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        return response
-
-    @classmethod
-    def authenticate_user(cls, email: str, password: str) -> User:
-        """
-        This method authenticates the user trough users AP
-        :param email: user email
-        :param password: user password
-        :return: None if credentials are not correct, User instance if credentials are correct.
-        """
-        user :User = User()
-        user.id = 1
-        user.firstname = "Mario"
-        user.lastname = "Rossi"
-        user.email = "example@example.com"
-        user.date_of_birth = date.fromisoformat('2001-01-01')
-        user.is_active = True
-        if cls.USERS_ENDPOINT is None:
-            return user
-        payload = dict(email=email, password=password)
-        try:
-            print('trying response....')
-            response = requests.post('%s/authenticate' % cls.USERS_ENDPOINT,
-                                     json=payload,
-                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS
-                                     )
-            print('received response....')
-            json_response = response.json()
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            # We can't connect to Users MS
-            return abort(500)
-
-        if response.status_code == 401:
-            # user is not authenticated
-            return None
-        elif response.status_code == 200:
-            user = User.build_from_json(json_response['user'])
-            return user
-        else:
-            raise RuntimeError(
-                'Microservice users returned an invalid status code %s, and message %s'
-                % (response.status_code, json_response['error_message'])
-            )
-
-    @classmethod
-    def get_all_users(cls):
-        user :User = User()
-        user.id = 1
-        user.firstname = "Mario"
-        user.lastname = "Rossi"
-        user.email = "example@example.com"
-        user.date_of_birth = date.fromisoformat('2001-01-01')
-        user.is_active = True
-        if cls.USERS_ENDPOINT is None:
-            return [user]
-        try:
-            url = "%s/users" % (cls.USERS_ENDPOINT)
-
-            response = requests.get(url, timeout=cls.REQUESTS_TIMEOUT_SECONDS)
-            json_payload = response.json()
-            users = None
-
-            if response.status_code == 200:
-                users = json_payload
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        return users
-
-    @classmethod
-    def add_user_to_blacklist(cls, id_blacklisted: int, user_id :int):
-        black_list_item :BlackListItem = BlackListItem()
-        black_list_item.id_user = user_id
-        black_list_item.id_blacklisted = 2
-        if cls.USERS_ENDPOINT is None:
-            return black_list_item
-
-        try:
-            url = "%s/users/%s/blacklist" % (cls.USERS_ENDPOINT,
-                                             user_id)
-            response = requests.post(url,
-                                     json={
-                                         'id': id_blacklisted
-                                     },
-                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS
-                                     )
-
-            print(response)
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        return response
 
     @classmethod
     def get_blacklist(cls, user_id: int):
-        black_list_item :BlackListItem = BlackListItem()
-        black_list_item.id_user = user_id
-        black_list_item.id_blacklisted = 2
+        black_list :List[BlackListItem] = []
         if cls.USERS_ENDPOINT is None:
+            black_list_item :BlackListItem = BlackListItem()
+            black_list_item.id_user = user_id
+            black_list_item.id_blacklisted = 2
             return [black_list_item]
         try:
             url = "%s/users/%s/blacklist" % (cls.USERS_ENDPOINT,
                                              user_id)
-
             response = requests.get(url, timeout=cls.REQUESTS_TIMEOUT_SECONDS)
-            json_payload = response.json()
-            blacklist = None
-
+            
             if response.status_code == 200:
-                blacklist = json_payload
+                for item in json.loads(response.json()):
+                    black_list_item :BlackListItem = BlackListItem.from_dict(item)
+                    black_list.append(black_list_item)
+            elif response.status_code != 404:
+                return abort(500)
 
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             return abort(500)
 
-        return blacklist
+        return black_list

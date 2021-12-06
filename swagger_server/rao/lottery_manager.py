@@ -17,74 +17,23 @@ class LotteryManager:
         :param id_user: the user id
         :return: Lottery obj with id_user=id_user
         """
-        lottery_info :LotteryInfo = LotteryInfo()
-        lottery_info.id = 0
-        lottery_info.points = 0
-        lottery_info.trials = 0
+        lottery_info :LotteryInfo = None
         if cls.LOTTERY_ENDPOINT is None:
+            lottery_info = LotteryInfo()
+            lottery_info.id = 0
+            lottery_info.points = 0
+            lottery_info.trials = 0
             return lottery_info
         try:
             response = requests.get("%s/users/%s/lottery" % (cls.LOTTERY_ENDPOINT, str(id_user)),
                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS)
-            json_payload = response.json()
 
             if response.status_code == 200:
-                lottery = json_payload
-            else:
-                raise RuntimeError(
-                    'Server has sent an unrecognized status code %s' % response.status_code)
+                lottery_info = LotteryInfo.from_dict(json.loads(response.json()))
+            elif response.status_code != 404:
+                return abort(500)
 
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             return abort(500)
 
-        return lottery
-
-    @classmethod
-    def create_lottery(cls, id_user: int, points: int, trials: int, user_id :int):
-        lottery_info :LotteryInfo = LotteryInfo()
-        lottery_info.id = 0
-        lottery_info.points = 0
-        lottery_info.trials = 0
-        if cls.LOTTERY_ENDPOINT is None:
-            return lottery_info
-        try:
-            url = "%s/users/%s/lottery" % (cls.LOTTERY_ENDPOINT,
-                                           str(user_id))
-            response = requests.post(url,
-                                     json={
-                                         'id_user': id_user,
-                                         'points': points,
-                                         'trials': trials
-                                     },
-                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS
-                                     )
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        return response
-
-    @classmethod
-    def update_lottery(cls, id_user: int, points: int, trials: int, user_id : int):
-        lottery_info :LotteryInfo = LotteryInfo()
-        lottery_info.id = 0
-        lottery_info.points = 0
-        lottery_info.trials = 0
-        if cls.LOTTERY_ENDPOINT is None:
-            return lottery_info
-        try:
-            url = "%s/users/%s/lottery" % (cls.LOTTERY_ENDPOINT,
-                                           str(user_id))
-            response = requests.post(url,
-                                     json={
-                                         'id_user': id_user,
-                                         'points': points,
-                                         'trials': trials
-                                     },
-                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS
-                                     )
-
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return abort(500)
-
-        return response
+        return lottery_info
