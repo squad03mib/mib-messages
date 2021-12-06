@@ -55,7 +55,7 @@ class TestDraftController(BaseTestCase):
 
         
         """
-
+        self.save_test_draft()
         query_string = [('current_user_id', 1)]
         response = self.client.open(
             '/drafts',

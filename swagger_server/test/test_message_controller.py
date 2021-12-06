@@ -50,12 +50,25 @@ class TestMessageController(BaseTestCase):
             query_string=query_string)
         assert response.status_code == 202
     
-    def test_mib_resources_message_get_all_messages(self):
+    def test_mib_resources_message_get_all_messages_sent(self):
         """Test case for mib_resources_message_get_all_messages
 
         
         """
+        self.send_test_message()
         query_string = [('type', 'sent'), ('current_user_id', 1)]
+        response = self.client.open(
+            '/messages',
+            method='GET',
+            query_string=query_string)
+        assert response.status_code == 200
+    
+    def test_mib_resources_message_get_all_messages_received(self):
+        """Test case for mib_resources_message_get_all_messages
+
+        
+        """
+        query_string = [('type', 'received'), ('current_user_id', 2)]
         response = self.client.open(
             '/messages',
             method='GET',
