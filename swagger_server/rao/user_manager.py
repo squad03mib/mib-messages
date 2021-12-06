@@ -36,7 +36,7 @@ class UserManager:
                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS)
 
             if response.status_code == 200:
-                user = User.from_dict(json.loads(response.json()))
+                user = User.from_dict(response.json())
             elif response.status_code != 404:
                 return abort(500)
 
@@ -57,10 +57,11 @@ class UserManager:
             url = "%s/users/%s/blacklist" % (cls.USERS_ENDPOINT,
                                              user_id)
             response = requests.get(url, timeout=cls.REQUESTS_TIMEOUT_SECONDS)
-            
+
             if response.status_code == 200:
-                for item in json.loads(response.json()):
+                for item in response.json():
                     black_list_item :BlackListItem = BlackListItem.from_dict(item)
+                    print(item)
                     black_list.append(black_list_item)
             elif response.status_code != 404:
                 return abort(500)

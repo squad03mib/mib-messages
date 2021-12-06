@@ -2,9 +2,10 @@ class Config(object):
     DEBUG = False
     TESTING = False
     import os
+    REQUESTS_TIMEOUT_SECONDS = int(os.getenv('REQUESTS_TIMEOUT_SECONDS', 0))
     USERS_MS_URL = os.getenv('USERS_MS_URL', None)
-    REQUESTS_TIMEOUT_SECONDS = os.getenv('REQUESTS_TIMEOUT_SECONDS', None)
     LOTTERY_MS_URL = os.getenv('LOTTERY_MS_URL', None)
+    CONTENT_FILTER_MS_URL = os.getenv('CONTENT_FILTER_MS_URL', None)
 
 
 class DebugConfig(Config):
@@ -42,6 +43,11 @@ class TestConfig(Config):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    REQUESTS_TIMEOUT_SECONDS = 0
+    USERS_MS_URL = None
+    LOTTERY_MS_URL = None
+    CONTENT_FILTER_MS_URL = None
 
 
 class ProdConfig(DevConfig):

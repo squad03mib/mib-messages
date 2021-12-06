@@ -29,7 +29,7 @@ class LotteryManager:
                                     timeout=cls.REQUESTS_TIMEOUT_SECONDS)
 
             if response.status_code == 200:
-                lottery_info = LotteryInfo.from_dict(json.loads(response.json()))
+                lottery_info = LotteryInfo.from_dict(response.json())
             elif response.status_code != 404:
                 return abort(500)
 
