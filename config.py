@@ -1,6 +1,9 @@
 class Config(object):
     DEBUG = False
     TESTING = False
+    import os
+    USERS_MS_URL = os.getenv('USERS_MS_URL', None)
+    REQUESTS_TIMEOUT_SECONDS = os.getenv('REQUESTS_TIMEOUT_SECONDS', None)
 
 
 class DebugConfig(Config):

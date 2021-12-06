@@ -20,8 +20,8 @@ class TestDraftController(BaseTestCase):
         Save a draft and returns its id
         """
         body = DraftPost()
-        body.id_sender = 0
-        body.recipients_list = [1]
+        body.id_sender = 1
+        body.recipients_list = [2]
         body.date_delivery = datetime.now().isoformat()
         body.text = "test"
         body.attachment_list = ["wjfklsjfkljfklsdjfklsjklfj"]
@@ -82,8 +82,8 @@ class TestDraftController(BaseTestCase):
         Create a new draft
         """
         body = DraftPost()
-        body.id_sender = 0
-        body.recipients_list = [1]
+        body.id_sender = 1
+        body.recipients_list = [2]
         body.date_delivery = datetime.now().isoformat()
         body.text = "test"
 

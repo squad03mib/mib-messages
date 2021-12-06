@@ -15,8 +15,11 @@ class DraftManager(Manager):
         return Draft.query.get(id_)
     
     @staticmethod
-    def retrieve_all():
-        return Draft.query.all()
+    def retrieve_all(user_id = None):
+        if user_id is not None:
+            return Draft.query.filter(Draft.id_sender == user_id).all()
+        else:
+            return Draft.query.all()
     
     @staticmethod
     def delete_draft(draft: Draft):

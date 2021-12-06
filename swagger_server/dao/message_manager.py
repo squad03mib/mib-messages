@@ -16,8 +16,17 @@ class MessageManager(Manager):
         return Message.query.get(id_)
     
     @staticmethod
-    def retrieve_all():
-        return Message.query.all()
+    def retrieve_all(type = None, user_id = None):
+        if type is not None and user_id is not None:
+            if type == 'sent':
+                return Message.query.filter(Message.id_sender == user_id).all()
+            else:
+                return Message.query.filter(Message.message_delivered.is_(True),
+                            Message.id_recipient == user_id).all()
+        elif type is not None and type == 'received':
+            return Message.query.filter(Message.message_delivered.is_(True)).all()
+        else:
+            return Message.query.all()
     
     @staticmethod
     def retrieve_pending_all():

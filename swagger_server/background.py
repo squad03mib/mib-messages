@@ -1,3 +1,4 @@
+from typing import List
 from celery import Celery
 from datetime import timedelta
 import smtplib
@@ -10,8 +11,6 @@ from os import environ
 
 environ.setdefault('CELERY_CONFIG_MODULE', 'swagger_server.background_config')
 
-#BACKEND = BROKER = 'redis://localhost:6379'
-#celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 celery = Celery(__name__)
 celery.config_from_envvar('CELERY_CONFIG_MODULE')
 _APP = create_app()
@@ -38,36 +37,37 @@ def setup_periodic_task(sender, **kwargs):
 
 @celery.task
 def send_message(id_message):
-    from swagger_server.dao.message_manager import MessageManager
+    from swagger_server.dao.message_manager import MessageManager, Message as Message_db
+    from swagger_server.rao.user_manager import UserManager, User
     with _APP.app_context():
-        msg = MessageManager.retrieve_by_id(id_message)
+        msg :Message_db = MessageManager.retrieve_by_id(id_message)
         MessageManager.send_message(msg)
-        return
-        usr = None
+        
+        recipient :User = UserManager.get_user_by_id(msg.id_recipient)
 
-        internal_send_email(usr.email, 'New bottle received',
-                                    'Hey ' + usr.firstname +
+        internal_send_email(recipient.email, 'New bottle received',
+                                    'Hey ' + recipient.firstname +
                                     ',\nyou just received a new message in a bottle.\n\nGreetings,\nThe MIB team')
 
 @celery.task
 def send_notification(id_message):
-    from swagger_server.dao.message_manager import MessageManager
+    from swagger_server.dao.message_manager import MessageManager, Message as Message_db
+    from swagger_server.rao.user_manager import UserManager, User
     with _APP.app_context():
-        msg = MessageManager.retrieve_by_id(id_message)
+        msg :Message_db = MessageManager.retrieve_by_id(id_message)
         MessageManager.read_message(msg)
-        return
-        current_user = None
-        usr = None
-        internal_send_email(usr.email, 'Message reading notification',
-                            current_user.firstname +
+        recipient :User = UserManager.get_user_by_id(msg.id_recipient)
+        sender :User = UserManager.get_user_by_id(msg.id_sender)
+        internal_send_email(sender.email, 'Message reading notification',
+                            recipient.firstname +
                             ' have just read your message in a bottle.\n\nGreetings,\nThe MIB team')
 
 
 @celery.task
 def search_for_pending_messages():
-    from swagger_server.dao.message_manager import MessageManager
+    from swagger_server.dao.message_manager import MessageManager, Message as Message_db
     with _APP.app_context():
-        msgs = MessageManager.retrieve_pending_all()
+        msgs :List[Message_db] = MessageManager.retrieve_pending_all()
         for msg in msgs:
             send_message.apply_async((msg.id_message,), eta=msg.date_delivery)
 

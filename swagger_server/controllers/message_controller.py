@@ -4,11 +4,12 @@ import six
 
 from swagger_server.models.message import Message  # noqa: E501
 from swagger_server.models.message_post import MessagePost  # noqa: E501
-from swagger_server import util
 from swagger_server.dao.message_manager import MessageManager
 from swagger_server.models_db.message import Message as Message_db
 from swagger_server.dao.attachment_manager import AttachmentManager
 from swagger_server.models_db.attachment import Attachment as Attachment_db
+from swagger_server.models.user import User
+from swagger_server.rao.user_manager import UserManager
 from flask import abort, request
 
 import pytz
@@ -24,9 +25,12 @@ def mib_resources_message_delete_message(current_user_id, message_id):  # noqa: 
 
     :rtype: None
     """
-    msg = MessageManager.retrieve_by_id(message_id)
+    msg :Message_db = MessageManager.retrieve_by_id(message_id)
     if msg is None:
         abort(404)
+    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) and\
+         (msg.id_recipient == current_user_id and not msg.message_delivered):
+        abort(403)
     else:
         AttachmentManager.delete_attachment_by_message_id(message_id)
         MessageManager.delete_message(msg)
@@ -44,7 +48,7 @@ def mib_resources_message_get_all_messages(current_user_id, type):  # noqa: E501
     """
     message_list = []
 
-    for msg in MessageManager.retrieve_all():
+    for msg in MessageManager.retrieve_all(type, current_user_id):
         message : Message = Message.from_dict(msg.serialize())
         attachment_list = AttachmentManager.retrieve_by_message_id(msg.id_message)
         if attachment_list is not None:
@@ -68,14 +72,16 @@ def mib_resources_message_get_message(current_user_id, message_id):  # noqa: E50
     :rtype: None
     """
     msg : Message_db = MessageManager.retrieve_by_id(message_id)
-    if msg is None: #or (int(msg.id_receiver) == current_user.id and not msg.delivered)
+    if msg is None:
         abort(404)
-    #elif int(msg.id_sender) != current_user.id and int(msg.id_receiver) != current_user.id:
-    #    abort(403)
+    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) and\
+         (msg.id_recipient == current_user_id and not msg.message_delivered):
+        abort(403)
     else:
-        #if not msg.message_read: #and int(msg.id_receiver) == current_user.id:
-        #    notify_msg_reading(msg)
-
+        if not msg.message_read and msg.id_recipient == current_user_id:
+            from swagger_server.background import send_notification as send_notification_task
+            send_notification_task.apply_async((msg.id_message,), eta=datetime.utcnow())
+        # TODO: bad words
         # if message contains bad words they are not showed
         #if int(msg.id_sender) != current_user.id:
         #    msg.text = purify_message(msg.text)
@@ -112,6 +118,8 @@ def mib_resources_message_send_message_internal(body):
         message_db.date_delivery = datetime.fromisoformat(body.date_delivery)
         message_db.text = body.text
 
+        # TODO: check blacklist
+
         message_db.date_send = datetime.now()
         message_db = MessageManager.create_message(message_db)
 
@@ -137,12 +145,14 @@ def mib_resources_message_withdraw_message(current_user_id, message_id):  # noqa
 
     :rtype: None
     """
-    message = MessageManager.retrieve_by_id(message_id)
-    if message is None:
+    msg = MessageManager.retrieve_by_id(message_id)
+    if msg is None:
         abort(404)
-    elif message.message_delivered:
-        abort(404)
+    elif (msg.id_sender != current_user_id) and\
+         (msg.id_sender == current_user_id and msg.message_delivered):
+         # TODO: Check Lottery points
+        abort(403)
     else:
         AttachmentManager.delete_attachment_by_message_id(message_id)
-        MessageManager.delete_message(message)
+        MessageManager.delete_message(msg)
         return "", 200

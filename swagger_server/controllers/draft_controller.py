@@ -25,9 +25,11 @@ def mib_resources_draft_delete_draft(current_user_id, draft_id):  # noqa: E501
 
     :rtype: None
     """
-    draft = DraftManager.retrieve_by_id(draft_id)
+    draft :Draft_db = DraftManager.retrieve_by_id(draft_id)
     if draft is None:
         abort(404)
+    elif draft.id_sender != current_user_id:
+        abort(403)
     else:
         AttachmentManager.delete_attachment_by_draft_id(draft_id)
         DraftManager.delete_draft(draft)
@@ -44,7 +46,7 @@ def mib_resources_draft_get_all_drafts(current_user_id):  # noqa: E501
     """
     draft_list = []
 
-    for draft_db in DraftManager.retrieve_all():
+    for draft_db in DraftManager.retrieve_all(current_user_id):
         draft : DraftManager = Draft.from_dict(draft_db.serialize())
         attachment_list = AttachmentManager.retrieve_by_draft_id(draft_db.id_draft)
         if attachment_list is not None:
@@ -69,6 +71,8 @@ def mib_resources_draft_get_draft(current_user_id, draft_id):  # noqa: E501
     draft_db : Draft_db = DraftManager.retrieve_by_id(draft_id)
     if draft_db is None:
         abort(404)
+    elif draft_db.id_sender != current_user_id:
+        abort(403)
     else:
         draft : Draft = Draft.from_dict(draft_db.serialize())
         attachment_list = AttachmentManager.retrieve_by_draft_id(draft_id)
@@ -123,6 +127,8 @@ def mib_resources_draft_send_draft(current_user_id, draft_id):  # noqa: E501
     draft : Draft_db = DraftManager.retrieve_by_id(draft_id)
     if draft is None:
         abort(404)
+    elif draft.id_sender != current_user_id:
+        abort(403)
     else:
         msg_post = MessagePost()
         msg_post.recipients_list = json.loads(draft.recipient_json)
