@@ -43,8 +43,7 @@ jobs:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
           command:
-            export BROKER_URL=redis
-            tox
+            export BROKER_URL=redis; tox
       - codecov/upload:
           file: './coverage.xml'
 
