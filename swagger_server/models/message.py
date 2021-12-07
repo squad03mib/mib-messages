@@ -14,15 +14,15 @@ class Message(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_message: int=None, id_sender: int=None, recipients_list: List[Object]=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: date=None, date_send: date=None):  # noqa: E501
+    def __init__(self, id_message: int=None, id_sender: int=None, id_recipient: int=None, text: str=None, message_delivered: bool=None, message_read: bool=None, date_delivery: str=None, date_send: str=None, attachment_list: List[object]=None):  # noqa: E501
         """Message - a model defined in Swagger
 
         :param id_message: The id_message of this Message.  # noqa: E501
         :type id_message: int
         :param id_sender: The id_sender of this Message.  # noqa: E501
         :type id_sender: int
-        :param recipients_list: The recipients_list of this Message.  # noqa: E501
-        :type recipients_list: List[Object]
+        :param id_recipient: The id_recipient of this Message.  # noqa: E501
+        :type id_recipient: int
         :param text: The text of this Message.  # noqa: E501
         :type text: str
         :param message_delivered: The message_delivered of this Message.  # noqa: E501
@@ -30,39 +30,44 @@ class Message(Model):
         :param message_read: The message_read of this Message.  # noqa: E501
         :type message_read: bool
         :param date_delivery: The date_delivery of this Message.  # noqa: E501
-        :type date_delivery: date
+        :type date_delivery: str
         :param date_send: The date_send of this Message.  # noqa: E501
-        :type date_send: date
+        :type date_send: str
+        :param attachment_list: The attachment_list of this Message.  # noqa: E501
+        :type attachment_list: List[object]
         """
         self.swagger_types = {
             'id_message': int,
             'id_sender': int,
-            'recipients_list': List[Object],
+            'id_recipient': int,
             'text': str,
             'message_delivered': bool,
             'message_read': bool,
-            'date_delivery': date,
-            'date_send': date
+            'date_delivery': str,
+            'date_send': str,
+            'attachment_list': List[object]
         }
 
         self.attribute_map = {
             'id_message': 'id_message',
             'id_sender': 'id_sender',
-            'recipients_list': 'recipients_list',
+            'id_recipient': 'id_recipient',
             'text': 'text',
             'message_delivered': 'message_delivered',
             'message_read': 'message_read',
             'date_delivery': 'date_delivery',
-            'date_send': 'date_send'
+            'date_send': 'date_send',
+            'attachment_list': 'attachment_list'
         }
         self._id_message = id_message
         self._id_sender = id_sender
-        self._recipients_list = recipients_list
+        self._id_recipient = id_recipient
         self._text = text
         self._message_delivered = message_delivered
         self._message_read = message_read
         self._date_delivery = date_delivery
         self._date_send = date_send
+        self._attachment_list = attachment_list
 
     @classmethod
     def from_dict(cls, dikt) -> 'Message':
@@ -126,29 +131,29 @@ class Message(Model):
         self._id_sender = id_sender
 
     @property
-    def recipients_list(self) -> List[Object]:
-        """Gets the recipients_list of this Message.
+    def id_recipient(self) -> int:
+        """Gets the id_recipient of this Message.
 
-        List of recipients IDs  # noqa: E501
+        Recipients ID  # noqa: E501
 
-        :return: The recipients_list of this Message.
-        :rtype: List[Object]
+        :return: The id_recipient of this Message.
+        :rtype: int
         """
-        return self._recipients_list
+        return self._id_recipient
 
-    @recipients_list.setter
-    def recipients_list(self, recipients_list: List[Object]):
-        """Sets the recipients_list of this Message.
+    @id_recipient.setter
+    def id_recipient(self, id_recipient: int):
+        """Sets the id_recipient of this Message.
 
-        List of recipients IDs  # noqa: E501
+        Recipients ID  # noqa: E501
 
-        :param recipients_list: The recipients_list of this Message.
-        :type recipients_list: List[Object]
+        :param id_recipient: The id_recipient of this Message.
+        :type id_recipient: int
         """
-        if recipients_list is None:
-            raise ValueError("Invalid value for `recipients_list`, must not be `None`")  # noqa: E501
+        if id_recipient is None:
+            raise ValueError("Invalid value for `id_recipient`, must not be `None`")  # noqa: E501
 
-        self._recipients_list = recipients_list
+        self._id_recipient = id_recipient
 
     @property
     def text(self) -> str:
@@ -226,24 +231,24 @@ class Message(Model):
         self._message_read = message_read
 
     @property
-    def date_delivery(self) -> date:
+    def date_delivery(self) -> str:
         """Gets the date_delivery of this Message.
 
         date of delivery  # noqa: E501
 
         :return: The date_delivery of this Message.
-        :rtype: date
+        :rtype: str
         """
         return self._date_delivery
 
     @date_delivery.setter
-    def date_delivery(self, date_delivery: date):
+    def date_delivery(self, date_delivery: str):
         """Sets the date_delivery of this Message.
 
         date of delivery  # noqa: E501
 
         :param date_delivery: The date_delivery of this Message.
-        :type date_delivery: date
+        :type date_delivery: str
         """
         if date_delivery is None:
             raise ValueError("Invalid value for `date_delivery`, must not be `None`")  # noqa: E501
@@ -251,26 +256,49 @@ class Message(Model):
         self._date_delivery = date_delivery
 
     @property
-    def date_send(self) -> date:
+    def date_send(self) -> str:
         """Gets the date_send of this Message.
 
         date of send  # noqa: E501
 
         :return: The date_send of this Message.
-        :rtype: date
+        :rtype: str
         """
         return self._date_send
 
     @date_send.setter
-    def date_send(self, date_send: date):
+    def date_send(self, date_send: str):
         """Sets the date_send of this Message.
 
         date of send  # noqa: E501
 
         :param date_send: The date_send of this Message.
-        :type date_send: date
+        :type date_send: str
         """
         if date_send is None:
             raise ValueError("Invalid value for `date_send`, must not be `None`")  # noqa: E501
 
         self._date_send = date_send
+
+    @property
+    def attachment_list(self) -> List[object]:
+        """Gets the attachment_list of this Message.
+
+        list of attachment files base64 encoded  # noqa: E501
+
+        :return: The attachment_list of this Message.
+        :rtype: List[object]
+        """
+        return self._attachment_list
+
+    @attachment_list.setter
+    def attachment_list(self, attachment_list: List[object]):
+        """Sets the attachment_list of this Message.
+
+        list of attachment files base64 encoded  # noqa: E501
+
+        :param attachment_list: The attachment_list of this Message.
+        :type attachment_list: List[object]
+        """
+
+        self._attachment_list = attachment_list

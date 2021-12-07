@@ -1,0 +1,90 @@
+#
+# Message in A bottle Docker Compose file
+#
+
+version: "3.6"
+
+services:
+  db_messages:
+    image: postgres:13
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      # this is only for development purpose
+      - "5342:5342"
+    env_file:
+      - env_file
+
+  redis_messages:
+    image: redis
+    ports:
+    - "6389:6389"
+    #- "6379:6379"
+
+  mib_messages:
+    <<:
+      # Building the image
+      &mib_messages
+      image: "mib-messages:latest"
+      build:
+        context: .
+        dockerfile: Dockerfile
+
+    ports:
+      - "8080:8080"
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db_messages
+      - BROKER_URL=redis://redis_messages
+      - RESULT_BACKEND=redis://redis_messages
+    depends_on:
+      - db_messages
+      - migrations_messages
+      - redis_messages
+
+  
+  migrations_messages:
+    #
+    # this service is used to apply migrations on db
+    #
+    <<: *mib_messages
+    command: flask db upgrade
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db_messages
+    restart: on-failure
+    depends_on:
+      - db_messages
+  
+  celery_worker_messages:
+    <<: *mib_messages
+    command: ['celery', '-A', 'swagger_server.background', 'worker', '--loglevel=DEBUG']
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db_messages
+      - BROKER_URL=redis://redis_messages
+      - RESULT_BACKEND=redis://redis_messages
+    depends_on:
+      - db_messages
+      - redis_messages
+
+  celery_beat_messages:
+    <<: *mib_messages
+    command: ['celery', '-A', 'swagger_server.background', 'beat', '--loglevel=DEBUG']
+    env_file:
+      - env_file
+    environment:
+      - POSTGRES_HOST=db_messages
+      - BROKER_URL=redis://redis_messages
+      - RESULT_BACKEND=redis://redis_messages
+    depends_on:
+      - db_messages
+      - redis_messages
+
+# Declaring all volumes
+volumes:
+  pgdata: null # for maintaing db data

@@ -13,6 +13,12 @@ paths:
       description: Get all messages list
       operationId: mib_resources_message_get_all_messages
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: type
         in: query
         description: The types of messages to retrieve
@@ -42,16 +48,27 @@ paths:
       - Message
       summary: Send a new message
       operationId: mib_resources_message_send_message
+      parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       requestBody:
         description: Create a new message and send it
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Message'
+              $ref: '#/components/schemas/Message_post'
         required: true
       responses:
         "201":
           description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
         default:
           description: Error processing the message
       x-openapi-router-controller: swagger_server.controllers.message_controller
@@ -62,6 +79,12 @@ paths:
       description: Get a message by its id
       operationId: mib_resources_message_get_message
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: message_id
         in: path
         description: Message Unique ID
@@ -75,6 +98,10 @@ paths:
       responses:
         "200":
           description: Return message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
         "404":
           description: Message not found
         default:
@@ -86,6 +113,12 @@ paths:
       description: Delete a message by its id
       operationId: mib_resources_message_delete_message
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: message_id
         in: path
         description: Message Unique ID
@@ -111,6 +144,12 @@ paths:
       description: Withdraw a sent message by its id
       operationId: mib_resources_message_withdraw_message
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: message_id
         in: path
         description: Message Unique ID
@@ -135,6 +174,13 @@ paths:
       - Draft
       description: Get all drafts list
       operationId: mib_resources_draft_get_all_drafts
+      parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       responses:
         "200":
           description: Return drafts list
@@ -153,16 +199,27 @@ paths:
       - Draft
       summary: Create a new draft
       operationId: mib_resources_draft_save_draft
+      parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       requestBody:
         description: Create and save a new draft
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Draft'
+              $ref: '#/components/schemas/Draft_post'
         required: true
       responses:
         "201":
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Draft'
         default:
           description: Error saving the draft
       x-openapi-router-controller: swagger_server.controllers.draft_controller
@@ -173,6 +230,12 @@ paths:
       description: Get a draft by its id
       operationId: mib_resources_draft_get_draft
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: draft_id
         in: path
         description: Draft Unique ID
@@ -186,6 +249,10 @@ paths:
       responses:
         "200":
           description: Return draft
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Draft'
         "404":
           description: Draft not found
         default:
@@ -197,6 +264,12 @@ paths:
       description: Delete a draft by its id
       operationId: mib_resources_draft_delete_draft
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: draft_id
         in: path
         description: Draft Unique ID
@@ -222,6 +295,12 @@ paths:
       description: Send a draft by its id
       operationId: mib_resources_draft_send_draft
       parameters:
+      - name: current_user_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: The current user ID
       - name: draft_id
         in: path
         description: Draft Unique ID
@@ -240,6 +319,7 @@ paths:
         default:
           description: Error processing the draft
       x-openapi-router-controller: swagger_server.controllers.draft_controller
+
 components:
   schemas:
     Message:
@@ -250,7 +330,7 @@ components:
       - id_sender
       - message_delivered
       - message_read
-      - recipients_list
+      - id_recipient
       - text
       type: object
       properties:
@@ -262,11 +342,10 @@ components:
           type: integer
           description: Sender ID
           example: 1
-        recipients_list:
-          type: array
-          description: List of recipients IDs
-          items:
-            example: "2, 3"
+        id_recipient:
+          type: integer
+          description: Recipients ID
+          example: 2
         text:
           type: string
           description: Message text
@@ -282,39 +361,84 @@ components:
         date_delivery:
           type: string
           description: date of delivery
-          format: date
-          example: 2021-11-24
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
         date_send:
           type: string
           description: date of send
-          format: date
-          example: 2021-11-23
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
       example:
         date_send: 2021-11-23T00:00:00.000+00:00
         id_message: 0
         date_delivery: 2021-11-24T00:00:00.000+00:00
         message_delivered: false
         message_read: false
-        recipients_list:
-        - "2, 3"
-        - "2, 3"
+        id_recipient: 2
         text: "Hi, how are you ?"
         id_sender: 1
-    Draft:
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"
+
+    Message_post:
       required:
       - date_delivery
-      - date_send
-      - id_message
-      - id_sender
-      - message_delivered
-      - message_read
       - recipients_list
       - text
       type: object
       properties:
-        id_message:
+        id_sender:
           type: integer
-          description: Message ID
+          description: Sender ID
+          example: 1
+        recipients_list:
+          type: array
+          description: List of recipients IDs
+          items:
+            example: 2
+        text:
+          type: string
+          description: Message text
+          example: "Hi, how are you ?"
+        date_delivery:
+          type: string
+          description: date of delivery
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
+      example:
+        date_delivery: 2021-11-24T00:00:00.000+00:00
+        recipients_list:
+        - 2
+        - 3
+        text: "Hi, how are you ?"
+        id_sender: 1
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"
+    
+    Draft:
+      required:
+      - id_draft
+      - id_sender
+      - text
+      type: object
+      properties:
+        id_draft:
+          type: integer
+          description: Draft ID
           example: 0
         id_sender:
           type: integer
@@ -324,38 +448,70 @@ components:
           type: array
           description: List of recipients IDs
           items:
-            example: "2, 3"
+            example: 2
         text:
           type: string
           description: Message text
           example: "Hi, how are you ?"
-        message_delivered:
-          type: boolean
-          description: flag for message delivery
-          example: false
-        message_read:
-          type: boolean
-          description: flag for message read
-          example: false
         date_delivery:
           type: string
           description: date of delivery
-          format: date
-          example: 2021-11-24
-        date_send:
-          type: string
-          description: date of send
-          format: date
-          example: 2021-11-23
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
       example:
-        date_send: 2021-11-23T00:00:00.000+00:00
-        id_message: 0
+        id_draft: 0
         date_delivery: 2021-11-24T00:00:00.000+00:00
-        message_delivered: false
-        message_read: false
         recipients_list:
-        - "2, 3"
-        - "2, 3"
+        - 2
+        - 3
         text: "Hi, how are you ?"
         id_sender: 1
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"
 
+    Draft_post:
+      required:
+      - text
+      type: object
+      properties:
+        id_sender:
+          type: integer
+          description: Sender ID
+          example: 1
+        recipients_list:
+          type: array
+          description: List of recipients IDs
+          items:
+            example: 2
+        text:
+          type: string
+          description: Message text
+          example: "Hi, how are you ?"
+        date_delivery:
+          type: string
+          description: date of delivery
+          format: datetime
+          example: 2021-11-23T00:00:00.000+00:00
+        attachment_list:
+          type: array
+          description: list of attachment files base64 encoded
+          items:
+            format: string
+            example: "bWFnbmlmaWNlbnQ"
+          nullable: true
+      example:
+        date_delivery: 2021-11-24T00:00:00.000+00:00
+        recipients_list:
+        - 2
+        - 3
+        text: "Hi, how are you ?"
+        id_sender: 1
+        attachment_list:
+        - "bWFnbmlmaWNlbnQ"
