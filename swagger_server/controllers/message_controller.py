@@ -11,6 +11,7 @@ from swagger_server.dao.attachment_manager import AttachmentManager
 from swagger_server.models_db.attachment import Attachment as Attachment_db
 from swagger_server.rao.user_manager import UserManager, BlackListItem
 from swagger_server.rao.lottery_manager import LotteryManager, LotteryInfo
+from swagger_server.rao.content_filter_manager import ContentFilterManager, PurifyMessage
 from flask import abort, request
 
 import pytz
@@ -56,8 +57,12 @@ def mib_resources_message_get_all_messages(current_user_id, type):  # noqa: E501
             message.attachment_list = []
             for attachment in attachment_list:
                 message.attachment_list.append(attachment.data)
-        message.text+=' - delivered: '
-        message.text+= 'True' if msg.message_delivered else 'False'
+        
+        # if message contains bad words they are not showed
+        if int(message.id_sender) != current_user_id:
+            purify_msg :PurifyMessage = PurifyMessage()
+            purify_msg.text = message.text
+            message.text = ContentFilterManager.purify_message(current_user_id, purify_msg).text
         message_list.append(message.to_dict())
 
     return message_list
@@ -82,10 +87,13 @@ def mib_resources_message_get_message(current_user_id, message_id):  # noqa: E50
         if not msg.message_read and msg.id_recipient == current_user_id:
             from swagger_server.background import send_notification as send_notification_task
             send_notification_task.apply_async((msg.id_message,), eta=datetime.utcnow())
-        # TODO: bad words
+
         # if message contains bad words they are not showed
-        #if int(msg.id_sender) != current_user.id:
-        #    msg.text = purify_message(msg.text)
+        if int(msg.id_sender) != current_user_id:
+            purify_msg :PurifyMessage = PurifyMessage()
+            purify_msg.text = msg.text
+            msg.text = ContentFilterManager.purify_message(current_user_id, purify_msg).text
+
         message : Message = Message.from_dict(msg.serialize())
         attachment_list = AttachmentManager.retrieve_by_message_id(message_id)
         if attachment_list is not None:
