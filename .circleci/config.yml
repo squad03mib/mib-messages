@@ -40,13 +40,11 @@ jobs:
           name: redis
           command: docker run -d -p 6379:6379 redis
       - run:
-          name: set environment
-          command: |
-            export BROKER_URL=redis
-      - run:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
-          command: tox
+          command:
+            export BROKER_URL=redis
+            tox
       - codecov/upload:
           file: './coverage.xml'
 
