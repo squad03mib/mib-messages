@@ -1,3 +1,5 @@
+[![squad03mib](https://circleci.com/gh/squad03mib/mib-messages.svg?style=svg)](https://app.circleci.com/pipelines/github/squad03mib/mib-messages)
+[![codecov](https://codecov.io/gh/squad03mib/mib-messages/branch/main/graph/badge.svg?token=ZYAR4S8RKA)](https://codecov.io/gh/squad03mib/mib-messages)
 # Swagger generated server
 
 ## Overview
