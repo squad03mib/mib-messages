@@ -2,10 +2,28 @@ class Config(object):
     DEBUG = False
     TESTING = False
     import os
-    REQUESTS_TIMEOUT_SECONDS = int(os.getenv('REQUESTS_TIMEOUT_SECONDS', 0))
-    USERS_MS_URL = os.getenv('USERS_MS_URL', None)
-    LOTTERY_MS_URL = os.getenv('LOTTERY_MS_URL', None)
-    CONTENT_FILTER_MS_URL = os.getenv('CONTENT_FILTER_MS_URL', None)
+    REQUESTS_TIMEOUT_SECONDS = int(os.getenv('REQUESTS_TIMEOUT_SECONDS', 10))
+
+    # users microservice
+    USERS_MS_PROTO = os.getenv('USERS_MS_PROTO', 'http')
+    USERS_MS_HOST = os.getenv('USERS_MS_HOST', 'localhost')
+    USERS_MS_PORT = os.getenv('USERS_MS_PORT', 5001)
+    USERS_MS_URL = '%s://%s:%s' % (USERS_MS_PROTO,
+                                   USERS_MS_HOST, USERS_MS_PORT)
+
+    # content filter microservice
+    CONTENT_FILTER_MS_PROTO = os.getenv('CONTENT_FILTER_MS_PROTO', 'http')
+    CONTENT_FILTER_MS_HOST = os.getenv('CONTENT_FILTER_MS_HOST', 'localhost')
+    CONTENT_FILTER_MS_PORT = os.getenv('CONTENT_FILTER_MS_PORT', 5005)
+    CONTENT_FILTER_MS_URL = '%s://%s:%s' % (CONTENT_FILTER_MS_PROTO,
+                                            CONTENT_FILTER_MS_HOST, CONTENT_FILTER_MS_PORT)
+
+    # lottery microservice
+    LOTTERY_MS_PROTO = os.getenv('LOTTERY_MS_PROTO', 'http')
+    LOTTERY_MS_HOST = os.getenv('LOTTERY_MS_HOST', 'localhost')
+    LOTTERY_MS_PORT = os.getenv('LOTTERY_MS_PORT', 5002)
+    LOTTERY_MS_URL = '%s://%s:%s' % (LOTTERY_MS_PROTO,
+                                     LOTTERY_MS_HOST, LOTTERY_MS_PORT)
 
 
 class DebugConfig(Config):
