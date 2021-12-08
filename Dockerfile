@@ -11,7 +11,7 @@ RUN ["pip", "install", "-r", "requirements.prod.txt"]
 
 COPY . /usr/src/app
 
-EXPOSE 8080
+EXPOSE 5003/tcp
 
 # Main command
 CMD ["gunicorn", "--config", "gunicorn.conf.py", "wsgi:app"]
