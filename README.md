@@ -1,3 +1,5 @@
+[![squad03mib](https://circleci.com/gh/squad03mib/mib-messages.svg?style=svg)](https://app.circleci.com/pipelines/github/squad03mib/mib-messages)
+[![codecov](https://codecov.io/gh/squad03mib/mib-messages/branch/main/graph/badge.svg?token=ZYAR4S8RKA)](https://codecov.io/gh/squad03mib/mib-messages)
 # Message in A Bottle - Messages
 
 This is the source code of Message in a Bottle Messages microservice, self project of _Advanced Software Engineering_ course, University of Pisa.
