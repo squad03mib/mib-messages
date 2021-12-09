@@ -7,7 +7,7 @@ class Draft(db.Model):
     SERIALIZE_LIST = ['id_draft', 'text', 'id_sender', 'recipient_json', 'date_delivery']
 
     id_draft = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    text = db.Column(db.Unicode(128))
+    text = db.Column(db.Text)
     id_sender = db.Column(db.Integer)
     recipient_json = db.Column(db.Unicode(128))
     date_delivery = db.Column(db.DateTime(timezone=True))

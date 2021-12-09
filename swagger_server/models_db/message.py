@@ -8,7 +8,7 @@ class Message(db.Model):
     SERIALIZE_LIST = ['id_message', 'text', 'id_sender', 'id_recipient', 'draft', 'message_delivered', 'message_read', 'date_delivery', 'date_send']
 
     id_message = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    text = db.Column(db.Unicode(128))
+    text = db.Column(db.Text)
     id_sender = db.Column(db.Integer)
     id_recipient = db.Column(db.Integer)
     draft = db.Column(db.Boolean, default=False)

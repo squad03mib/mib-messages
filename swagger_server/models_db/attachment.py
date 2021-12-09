@@ -11,7 +11,7 @@ class Attachment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_message = db.Column(db.Integer, ForeignKey('message.id_message'))
     id_draft = db.Column(db.Integer, ForeignKey('draft.id_draft'))
-    data = db.Column(db.Unicode(128))
+    data = db.Column(db.Text)
 
     def __init__(self, *args, **kw):
         super(Attachment, self).__init__(*args, **kw)
