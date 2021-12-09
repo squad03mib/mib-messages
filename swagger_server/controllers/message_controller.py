@@ -129,7 +129,7 @@ def mib_resources_message_send_message_internal(body):
         message_db.id_recipient = recipient
         utc=pytz.UTC
         date_delivery = datetime.fromisoformat(body.date_delivery)
-        if date_delivery < utc.localize(datetime.now()):
+        if date_delivery.replace(tzinfo=utc) < datetime.now().replace(tzinfo=utc):
             date_delivery = datetime.now()
         message_db.date_delivery = date_delivery
         message_db.text = body.text
