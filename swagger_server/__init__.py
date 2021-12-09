@@ -47,10 +47,10 @@ def create_app():
     flask_env = os.getenv('FLASK_ENV', 'None')
     if flask_env == 'development':
         config_object = 'config.DevConfig'
-    elif flask_env == 'testing':
-        config_object = 'config.TestConfig'
     elif flask_env == 'production':
         config_object = 'config.ProdConfig'
+    elif flask_env == 'testing':
+        config_object = 'config.TestConfig'
     else:
         raise RuntimeError(
             "%s is not recognized as valid app environment. You have to setup the environment!" % flask_env)

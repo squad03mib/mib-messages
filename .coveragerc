@@ -1,0 +1,2 @@
+[run]
+omit = *test*, *rao*, *models/user.py, *models/lottery_info.py, *models/purify.py, *models/black_list_item.py, *models/points.py, *util.py, swagger_server/__main__.py
