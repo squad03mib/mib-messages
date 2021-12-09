@@ -1,5 +1,6 @@
 from swagger_server import app
 from swagger_server.models.lottery_info import LotteryInfo
+from swagger_server.models.points import Points
 from flask import abort
 import requests
 import json
@@ -21,7 +22,7 @@ class LotteryManager:
         if cls.LOTTERY_ENDPOINT is None:
             lottery_info = LotteryInfo()
             lottery_info.id = 0
-            lottery_info.points = 0
+            lottery_info.points = 100
             lottery_info.trials = 0
             return lottery_info
         try:
@@ -33,7 +34,33 @@ class LotteryManager:
             elif response.status_code != 404:
                 return abort(500)
 
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            print(e)
             return abort(500)
 
         return lottery_info
+    
+
+    @classmethod
+    def spend_lottery_points_by_id_user(cls, id_user :int, points_to_spend :int):
+        """
+        This method contacts the lottery microservice
+        and retrieves the lottery object by user id.
+        :param id_user: the user id
+        :return: Lottery obj with id_user=id_user
+        """
+        points :Points = Points()
+        points.count = points_to_spend
+        if cls.LOTTERY_ENDPOINT is None:
+            return 
+        try:
+            response = requests.post("%s/users/%s/lottery/use" % (cls.LOTTERY_ENDPOINT, str(id_user)),
+                                     json=points.to_dict(), timeout=cls.REQUESTS_TIMEOUT_SECONDS)
+            if response.status_code == 200:
+                return True
+            else:
+                return False
+
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            print(e)
+            return abort(500)

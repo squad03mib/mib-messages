@@ -36,7 +36,8 @@ class ContentFilterManager:
             elif response.status_code != 404:
                 return abort(500)
 
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            print(e)
             return abort(500)
 
         return purified_msg

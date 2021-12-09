@@ -30,7 +30,7 @@ def mib_resources_message_delete_message(current_user_id, message_id):  # noqa: 
     msg :Message_db = MessageManager.retrieve_by_id(message_id)
     if msg is None:
         abort(404)
-    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) and\
+    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) or\
          (msg.id_recipient == current_user_id and not msg.message_delivered):
         abort(403)
     else:
@@ -80,13 +80,16 @@ def mib_resources_message_get_message(current_user_id, message_id):  # noqa: E50
     msg : Message_db = MessageManager.retrieve_by_id(message_id)
     if msg is None:
         abort(404)
-    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) and\
+    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) or\
          (msg.id_recipient == current_user_id and not msg.message_delivered):
         abort(403)
     else:
         if not msg.message_read and msg.id_recipient == current_user_id:
             from swagger_server.background import send_notification as send_notification_task
-            send_notification_task.apply_async((msg.id_message,), eta=datetime.utcnow())
+            try:
+                send_notification_task.apply_async((msg.id_message,), eta=datetime.utcnow())
+            except Exception as e:
+                print(e)
 
         # if message contains bad words they are not showed
         if int(msg.id_sender) != current_user_id:
@@ -124,7 +127,11 @@ def mib_resources_message_send_message_internal(body):
         message_db = Message_db()
         message_db.id_sender = body.id_sender
         message_db.id_recipient = recipient
-        message_db.date_delivery = datetime.fromisoformat(body.date_delivery)
+        utc=pytz.UTC
+        date_delivery = datetime.fromisoformat(body.date_delivery)
+        if date_delivery.replace(tzinfo=utc) < datetime.now().replace(tzinfo=utc):
+            date_delivery = datetime.now()
+        message_db.date_delivery = date_delivery
         message_db.text = body.text
 
         #check blacklist
@@ -144,7 +151,10 @@ def mib_resources_message_send_message_internal(body):
                 AttachmentManager.create_attachment(attachment_db)
         
         from swagger_server.background import send_message as send_message_task
-        send_message_task.apply_async((message_db.id_message,), eta=message_db.date_delivery.astimezone(pytz.UTC))
+        try:
+            send_message_task.apply_async((message_db.id_message,), eta=message_db.date_delivery.astimezone(pytz.UTC))
+        except Exception as e :
+            print(e)
     
     return Message.from_dict(message_db.serialize()).to_dict(), 201
 
@@ -167,6 +177,7 @@ def mib_resources_message_withdraw_message(current_user_id, message_id):  # noqa
          lottery_info.points < 100:
         abort(403)
     else:
+        LotteryManager.spend_lottery_points_by_id_user(current_user_id, 100)
         AttachmentManager.delete_attachment_by_message_id(message_id)
         MessageManager.delete_message(msg)
         return "", 200

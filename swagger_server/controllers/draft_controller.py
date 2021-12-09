@@ -1,3 +1,4 @@
+from typing import List
 import connexion
 import six
 import json
@@ -46,8 +47,11 @@ def mib_resources_draft_get_all_drafts(current_user_id):  # noqa: E501
     """
     draft_list = []
 
-    for draft_db in DraftManager.retrieve_all(current_user_id):
-        draft : DraftManager = Draft.from_dict(draft_db.serialize())
+    draft_db_list :List[Draft_db] = DraftManager.retrieve_all(current_user_id)
+
+    for draft_db in draft_db_list:
+        draft : Draft = Draft.from_dict(draft_db.serialize())
+        draft.recipients_list = json.loads(draft_db.recipient_json)
         attachment_list = AttachmentManager.retrieve_by_draft_id(draft_db.id_draft)
         if attachment_list is not None:
             draft.attachment_list = []
@@ -75,6 +79,7 @@ def mib_resources_draft_get_draft(current_user_id, draft_id):  # noqa: E501
         abort(403)
     else:
         draft : Draft = Draft.from_dict(draft_db.serialize())
+        draft.recipients_list = json.loads(draft_db.recipient_json)
         attachment_list = AttachmentManager.retrieve_by_draft_id(draft_id)
         if attachment_list is not None:
             draft.attachment_list = []
@@ -111,7 +116,9 @@ def mib_resources_draft_save_draft(body, current_user_id):  # noqa: E501
             attachment_db.data = attachment
             AttachmentManager.create_attachment(attachment_db)
 
-    return Draft.from_dict(draft_db.serialize()).to_dict(), 201
+    draft :Draft = Draft.from_dict(draft_db.serialize())
+    draft.recipients_list = json.loads(draft_db.recipient_json)
+    return draft.to_dict(), 201
 
 
 def mib_resources_draft_send_draft(current_user_id, draft_id):  # noqa: E501

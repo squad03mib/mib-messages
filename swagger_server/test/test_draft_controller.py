@@ -49,6 +49,34 @@ class TestDraftController(BaseTestCase):
             method='DELETE',
             query_string=query_string)
         assert response.status_code == 202
+
+    def test_mib_resources_draft_delete_draft_404(self):
+        """Test case for mib_resources_draft_delete_draft
+
+        
+        """
+        id=999
+
+        query_string = [('current_user_id', 1)]
+        response = self.client.open(
+            '/drafts/{draft_id}'.format(draft_id=id),
+            method='DELETE',
+            query_string=query_string)
+        assert response.status_code == 404
+
+    def test_mib_resources_draft_delete_draft_403(self):
+        """Test case for mib_resources_draft_delete_draft
+
+        
+        """
+        id=self.save_test_draft()
+
+        query_string = [('current_user_id', 999)]
+        response = self.client.open(
+            '/drafts/{draft_id}'.format(draft_id=id),
+            method='DELETE',
+            query_string=query_string)
+        assert response.status_code == 403
         
     def test_mib_resources_draft_get_all_drafts(self):
         """Test case for mib_resources_draft_get_all_drafts

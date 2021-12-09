@@ -17,16 +17,11 @@ class MessageManager(Manager):
     
     @staticmethod
     def retrieve_all(type = None, user_id = None):
-        if type is not None and user_id is not None:
-            if type == 'sent':
-                return Message.query.filter(Message.id_sender == user_id).all()
-            else:
-                return Message.query.filter(Message.message_delivered.is_(True),
-                            Message.id_recipient == user_id).all()
-        elif type is not None and type == 'received':
-            return Message.query.filter(Message.message_delivered.is_(True)).all()
+        if type == 'sent':
+            return Message.query.filter(Message.id_sender == user_id).all()
         else:
-            return Message.query.all()
+            return Message.query.filter(Message.message_delivered.is_(True),
+                        Message.id_recipient == user_id).all()
     
     @staticmethod
     def retrieve_pending_all():
@@ -36,12 +31,7 @@ class MessageManager(Manager):
     @staticmethod
     def delete_message(message: Message):
         Manager.delete(message=message)
-    
-    @staticmethod
-    def delete_message_by_id(id_: int):
-        message = MessageManager.retrieve_by_id(id_)
-        MessageManager.delete_message(message)
-    
+
     @staticmethod
     def send_message(message: Message):
         message.message_delivered = True

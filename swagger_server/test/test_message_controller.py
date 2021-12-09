@@ -14,7 +14,7 @@ from datetime import datetime
 class TestMessageController(BaseTestCase):
     """MessageController integration test stubs"""
 
-    def send_test_message(self):
+    def send_test_message(self,send=True):
         """Util function used in tests
 
         Sends a message and returns its id
@@ -33,7 +33,13 @@ class TestMessageController(BaseTestCase):
             content_type='application/json',
             query_string=query_string)
         assert response.status_code == 201
-        return int(response.json["id_message"])
+
+        from swagger_server.background import send_message
+        id=int(response.json["id_message"])
+        if send:
+            send_message.apply((id,))
+
+        return id
     
     
     def test_mib_resources_message_delete_message(self):
@@ -41,7 +47,9 @@ class TestMessageController(BaseTestCase):
 
         Send and delete a message
         """
+        from swagger_server.background import send_message
         id=self.send_test_message()
+        send_message.apply((id,))
 
         query_string = [('current_user_id', 1)]
         response = self.client.open(
@@ -49,7 +57,38 @@ class TestMessageController(BaseTestCase):
             method='DELETE',
             query_string=query_string)
         assert response.status_code == 202
+
     
+    def test_mib_resources_message_delete_message_404(self):
+        """Test case for mib_resources_message_delete_message
+
+        Send and delete a message
+        """
+        id=999
+
+        query_string = [('current_user_id', 1)]
+        response = self.client.open(
+            '/messages/{message_id}'.format(message_id=id),
+            method='DELETE',
+            query_string=query_string)
+        assert response.status_code == 404
+
+
+    def test_mib_resources_message_delete_message_403(self):
+        """Test case for mib_resources_message_delete_message
+
+        Send and delete a message
+        """
+        id=self.send_test_message()
+
+        query_string = [('current_user_id', 999)]
+        response = self.client.open(
+            '/messages/{message_id}'.format(message_id=id),
+            method='DELETE',
+            query_string=query_string)
+        assert response.status_code == 403
+    
+
     def test_mib_resources_message_get_all_messages_sent(self):
         """Test case for mib_resources_message_get_all_messages
 
@@ -87,6 +126,22 @@ class TestMessageController(BaseTestCase):
             method='GET',
             query_string=query_string)
         assert response.status_code == 404
+
+    def test_mib_resources_message_get_message_403(self):
+        """Test case for mib_resources_message_get_message
+
+        Send and retrieve a message
+        """
+        from swagger_server.background import send_message
+        id=self.send_test_message()
+        send_message.apply((id,))
+
+        query_string = [('current_user_id', 999)]
+        response = self.client.open(
+            '/messages/{message_id}'.format(message_id=id),
+            method='GET',
+            query_string=query_string)
+        assert response.status_code == 403
     
     def test_mib_resources_message_send_message(self):
         """Test case for mib_resources_message_send_message
@@ -122,7 +177,7 @@ class TestMessageController(BaseTestCase):
             query_string=query_string)
         assert response.status_code == 200
     
-    def test_mib_resources_message_withdraw_message(self):
+    def test_mib_resources_message_withdraw_message_403(self):
         """Test case for mib_resources_message_withdraw_message
 
         Send and withdraw a message
@@ -135,4 +190,18 @@ class TestMessageController(BaseTestCase):
             method='POST',
             query_string=query_string)
         assert response.status_code == 403
+
+    def test_mib_resources_message_withdraw_message(self):
+        """Test case for mib_resources_message_withdraw_message
+
+        Send and withdraw a message
+        """
+        id=self.send_test_message(False)
+
+        query_string = [('current_user_id', 0)]
+        response = self.client.open(
+            '/messages/{message_id}/withdraw'.format(message_id=id),
+            method='POST',
+            query_string=query_string)
+        assert response.status_code == 200
     
