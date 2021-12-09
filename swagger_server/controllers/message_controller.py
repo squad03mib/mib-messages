@@ -86,7 +86,10 @@ def mib_resources_message_get_message(current_user_id, message_id):  # noqa: E50
     else:
         if not msg.message_read and msg.id_recipient == current_user_id:
             from swagger_server.background import send_notification as send_notification_task
-            send_notification_task.apply_async((msg.id_message,), eta=datetime.utcnow())
+            try:
+                send_notification_task.apply_async((msg.id_message,), eta=datetime.utcnow())
+            except Exception as e:
+                print(e)
 
         # if message contains bad words they are not showed
         if int(msg.id_sender) != current_user_id:
