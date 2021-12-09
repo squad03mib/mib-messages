@@ -22,7 +22,7 @@ class LotteryManager:
         if cls.LOTTERY_ENDPOINT is None:
             lottery_info = LotteryInfo()
             lottery_info.id = 0
-            lottery_info.points = 0
+            lottery_info.points = 100
             lottery_info.trials = 0
             return lottery_info
         try:
@@ -51,6 +51,8 @@ class LotteryManager:
         """
         points :Points = Points()
         points.count = points_to_spend
+        if cls.LOTTERY_ENDPOINT is None:
+            return 
         try:
             response = requests.post("%s/users/%s/lottery/use" % (cls.LOTTERY_ENDPOINT, str(id_user)),
                                      json=points.to_dict(), timeout=cls.REQUESTS_TIMEOUT_SECONDS)

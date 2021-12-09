@@ -80,7 +80,7 @@ def mib_resources_message_get_message(current_user_id, message_id):  # noqa: E50
     msg : Message_db = MessageManager.retrieve_by_id(message_id)
     if msg is None:
         abort(404)
-    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) and\
+    elif (msg.id_sender != current_user_id and msg.id_recipient != current_user_id) or\
          (msg.id_recipient == current_user_id and not msg.message_delivered):
         abort(403)
     else:
