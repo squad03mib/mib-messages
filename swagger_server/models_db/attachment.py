@@ -16,5 +16,3 @@ class Attachment(db.Model):
     def __init__(self, *args, **kw):
         super(Attachment, self).__init__(*args, **kw)
     
-    def serialize(self):
-        return dict([(k, self.__getattribute__(k)) for k in self.SERIALIZE_LIST])

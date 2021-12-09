@@ -41,7 +41,7 @@ class TestMessageController(BaseTestCase):
 
         Send and delete a message
         """
-        id=self.send_test_message()
+        id=1
 
         query_string = [('current_user_id', 1)]
         response = self.client.open(
@@ -49,7 +49,38 @@ class TestMessageController(BaseTestCase):
             method='DELETE',
             query_string=query_string)
         assert response.status_code == 202
+
     
+    def test_mib_resources_message_delete_message_404(self):
+        """Test case for mib_resources_message_delete_message
+
+        Send and delete a message
+        """
+        id=999
+
+        query_string = [('current_user_id', 1)]
+        response = self.client.open(
+            '/messages/{message_id}'.format(message_id=id),
+            method='DELETE',
+            query_string=query_string)
+        assert response.status_code == 404
+
+
+    def test_mib_resources_message_delete_message_403(self):
+        """Test case for mib_resources_message_delete_message
+
+        Send and delete a message
+        """
+        id=self.send_test_message()
+
+        query_string = [('current_user_id', 999)]
+        response = self.client.open(
+            '/messages/{message_id}'.format(message_id=id),
+            method='DELETE',
+            query_string=query_string)
+        assert response.status_code == 403
+    
+
     def test_mib_resources_message_get_all_messages_sent(self):
         """Test case for mib_resources_message_get_all_messages
 

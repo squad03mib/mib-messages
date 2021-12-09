@@ -8,11 +8,6 @@ class AttachmentManager(Manager):
     def create_attachment(attachment: Attachment):
         Manager.create(attachment=attachment)
         return attachment
-
-    @staticmethod
-    def retrieve_by_id(id_):
-        Manager.check_none(id=id_)
-        return Attachment.query.get(id_)
     
     @staticmethod
     def retrieve_by_message_id(message_id: int):
