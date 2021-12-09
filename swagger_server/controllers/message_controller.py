@@ -127,7 +127,11 @@ def mib_resources_message_send_message_internal(body):
         message_db = Message_db()
         message_db.id_sender = body.id_sender
         message_db.id_recipient = recipient
-        message_db.date_delivery = datetime.fromisoformat(body.date_delivery)
+        utc=pytz.UTC
+        date_delivery = datetime.fromisoformat(body.date_delivery)
+        if date_delivery < utc.localize(datetime.now()):
+            date_delivery = datetime.now()
+        message_db.date_delivery = date_delivery
         message_db.text = body.text
 
         #check blacklist
