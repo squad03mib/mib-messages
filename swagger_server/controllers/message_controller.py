@@ -167,6 +167,7 @@ def mib_resources_message_withdraw_message(current_user_id, message_id):  # noqa
          lottery_info.points < 100:
         abort(403)
     else:
+        LotteryManager.spend_lottery_points_by_id_user(current_user_id, 100)
         AttachmentManager.delete_attachment_by_message_id(message_id)
         MessageManager.delete_message(msg)
         return "", 200
