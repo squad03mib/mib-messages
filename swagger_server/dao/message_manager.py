@@ -21,7 +21,7 @@ class MessageManager(Manager):
             return Message.query.filter(Message.id_sender == user_id).all()
         else:
             return Message.query.filter(Message.message_delivered.is_(True),
-                        Message.id_recipient == user_id).all()
+                        Message.id_recipient == user_id, Message.blacklisted.is_(False)).all()
     
     @staticmethod
     def retrieve_pending_all():
